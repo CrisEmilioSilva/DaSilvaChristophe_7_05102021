@@ -7,17 +7,40 @@ const models = require('../models');
 /* Regex */
 
 const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+const passwordRegex = /^[a-zA-Z]\w{3,14}$/;
 
 /* Exports */
 
 module.exports.signup = (req, res, next) => {
-    bcrypt.hash(req.body.password, 10) // Apel de la fonction de hachage "hash" de bcrypt et salage du mdp (10 fois)
+    
+    const email = req.body.email;
+    const password = req.body.password;
+    const firstName = req.body.firstName;
+    const lastName = req.body.lastName;
+  
+    if (firstName.length >= 13 && firstName.length <= 2) {
+      return res.status(400).json({ 'error': 'Votre prénom doit contenir entre 2 et 13 caractères' });
+    }
+
+    if (lastName.length >= 13 && lastName.length <= 2) {
+      return res.status(400).json({ 'error': 'Votre nom doit contenir entre 2 et 13 caractères' });
+    }
+    
+    if (!emailRegex.test(email)) {
+      return res.status(400).json({ 'error': 'email est invalide' });
+    }
+
+    if (!passwordRegex.test(password)) {
+      return res.status(400).json({ 'error': 'Votre mot de passe doit commencer par une lettre, être compris entre 3 et 15 caractères et contenir uniquement des lettres et des chiffres' });
+    }
+  
+    bcrypt.hash(password, 10) // Apel de la fonction de hachage "hash" de bcrypt et salage du mdp (10 fois)
       .then(hash => {
         const user = models.User.create({
-          email: req.body.email,
+          email: email,
           password: hash,
-          firstName: req.body.firstName,
-          lastName: req.body.lastName,
+          firstName: firstName,
+          lastName: lastName,
           admin: 0
         })
         return res.status(201).json({ message:'Nouvel utilisateur créer'});
