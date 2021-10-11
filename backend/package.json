@@ -1,7 +1,7 @@
 {
   "name": "backend",
   "version": "1.0.0",
-  "description": "réseau social d'entreprise",
+  "description": "Projet réseau d'entreprise Groupomania",
   "main": "server.js",
   "scripts": {
     "start": "nodemon server"
@@ -9,10 +9,16 @@
   "author": "Cris",
   "license": "ISC",
   "dependencies": {
+    "bcrypt": "^5.0.1",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
+    "mysql": "^2.18.1",
     "mysql2": "^2.3.0",
     "nodemon": "^2.0.13",
     "sequelize": "^6.6.5"
+  },
+  "devDependencies": {
+    "sequelize-cli": "^6.2.0"
   }
 }
