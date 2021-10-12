@@ -9,7 +9,7 @@ const models = require('../models');
 const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
 const passwordRegex = /^[a-zA-Z]\w{3,14}$/;
 
-/* Exports */
+/* Exports - Inscription and Connexion User */
 
 module.exports.signup = (req, res, next) => {
     
@@ -17,6 +17,7 @@ module.exports.signup = (req, res, next) => {
     const password = req.body.password;
     const firstName = req.body.firstName;
     const lastName = req.body.lastName;
+    const bio = req.body.bio;
   
     if (firstName.length >= 13 && firstName.length <= 2) {
       return res.status(400).json({ 'error': 'Votre prénom doit contenir entre 2 et 13 caractères' });
@@ -41,6 +42,7 @@ module.exports.signup = (req, res, next) => {
           password: hash,
           firstName: firstName,
           lastName: lastName,
+          bio: bio,
           admin: 0
         })
         return res.status(201).json({ message:'Nouvel utilisateur créer'});
@@ -72,3 +74,18 @@ module.exports.login = (req, res, next) => {
         })
       .catch(error => res.status(500).json({ error }));
 };
+
+/* Exports - Requète User */
+
+module.exports.getUserProfile = (req, res, next) => {
+  models.User.findOne({id: req.params.id} )
+    .then((user) => {res.status(200).json(user);
+    })
+    .catch((error) => {res.status(400).json({error: error});
+    });
+};
+
+module.exports.modifyUserProfile = (req, res, next) => {
+ 
+};
+
