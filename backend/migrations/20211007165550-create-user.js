@@ -26,11 +26,15 @@ module.exports = {
         allowNull: false,
         type: Sequelize.STRING
       },
-      imageUrl: {
+      job: {
         allowNull: true,
         type: Sequelize.STRING
       },
       bio: {
+        allowNull: true,
+        type: Sequelize.STRING
+      },
+      imageUrl: {
         allowNull: true,
         type: Sequelize.STRING
       },

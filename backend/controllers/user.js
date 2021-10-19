@@ -12,13 +12,14 @@ const passwordRegex = /^[a-zA-Z]\w{3,14}$/;
 /* Exports - Inscription and Connexion User */
 
 module.exports.signup = (req, res, next) => {
-    
-    const email = req.body.email;
-    const password = req.body.password;
-    const firstName = req.body.firstName;
-    const lastName = req.body.lastName;
-    const bio = req.body.bio;
-    const imageUrl = req.body.imageUrl;
+
+  const email = req.body.email;
+  const password = req.body.password;
+  const firstName = req.body.firstName;
+  const lastName = req.body.lastName;
+  const job = req.body.job;
+  const bio = req.body.bio;
+  const imageUrl = req.body.imageUrl;
   
     if (firstName.length >= 13 && firstName.length <= 2) {
       return res.status(400).json({ 'error': 'Le prénom doit contenir entre 2 et 13 caractères' });
@@ -43,6 +44,7 @@ module.exports.signup = (req, res, next) => {
           password: hash,
           firstName: firstName,
           lastName: lastName,
+          job: job,
           bio: bio,
           imageUrl: imageUrl,
           admin: 0
@@ -80,14 +82,28 @@ module.exports.login = (req, res, next) => {
 /* Exports - Requète User */
 
 module.exports.getUserProfile = (req, res, next) => {
-  models.User.findOne({where:  {id: req.params.id} })
-    .then((user) => {res.status(200).json(user);
-    })
-    .catch((error) => {res.status(400).json({error: error});
-    });
+  models.User.findOne({ where: {id: req.params.id} })
+  .then((user) => {res.status(200).json(user);
+  })
+  .catch((error) => {res.status(404).json({error: error});
+  });
 };
 
-module.exports.modifyUserProfile = (req, res, next) => {
- 
+module.exports.modifyUserProfile = async (req, res, next) => {
+  const userObject = req.file ? 
+  {
+      ...JSON.parse(req.body.user),  
+      imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+  } : { ...req.body }; 
+  
+  await models.User.findOne({ where: {id: req.params.id} }) 
+  .then((user) => { if (user == user.id) { // ?
+    return res.status(401).json({ message: 'non autorisé' })}
+      user.update({ ...userObject }, { where: {id: req.params.id} })
+      .then(() => res.status(200).json({ message: 'Profil utilisateur modifié !'}))
+      .catch(error => res.status(403).json({ error }));
+  })
 };
+
+
 

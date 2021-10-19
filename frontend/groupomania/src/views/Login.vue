@@ -30,6 +30,7 @@
               <input v-model="password" type="password" class="form-control" id="inputPassword" placeholder="Password"> 
             </div>
             <div class="password-errors"></div>
+          
           </div>
           <a @click="connectAccount" v-if="mode == 'login'" class="btn btn-primary w-75 mt-2">Se connecter</a>
           <a @click="inscription" v-if="mode == 'login'" class="btn btn-success w-75 my-2">S'inscrire</a>

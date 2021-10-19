@@ -4,6 +4,7 @@ const express = require('express');
 const app = express();
 const userRoutes = require('./routes/user');
 const messageRoutes = require('./routes/message');
+const path = require('path');
 
 
 app.use((req, res, next) => {
@@ -20,6 +21,10 @@ app.use(express.urlencoded({extended:true}));
 
 app.use('/api/users', userRoutes);
 app.use('/api/messages', messageRoutes);
+
+/* Indique à Express qu'il faut gérer la ressource images de manière statique */
+
+app.use('/images', express.static(path.join(__dirname, 'images')));
 
 
 app.listen(process.env.PORT, () => {
