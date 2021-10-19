@@ -9,7 +9,7 @@ const auth = require('../controllers/auth');
 
 router.post('/signup', userCtrl.signup);
 router.post('/login', userCtrl.login);
-router.get('/profil', auth, userCtrl.getUserProfile)
+router.get('/profil/:id', auth, userCtrl.getUserProfile)
 router.put('/profil', auth, userCtrl.modifyUserProfile)
 
 /* Exports */

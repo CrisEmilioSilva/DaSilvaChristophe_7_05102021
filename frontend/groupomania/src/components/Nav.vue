@@ -17,10 +17,8 @@
           <a @click="anchorProfile" href="" class="nav-link" aria-current="page">Profil</a>
         </li> 
       </ul>
-      <form class="d-flex">
-        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-        <button class="btn btn-outline-success" type="submit">Search</button>
-      </form>
+      <SearchBar/>
+      <LogOut/>
     </div>
   </div>
 </nav>
@@ -28,10 +26,15 @@
 
 <script>
 
+import LogOut from '../components/LogOut.vue'
+import SearchBar from '../components/SearchBar.vue'
 import router from '../router'
 
 export default {
 	name: 'Nav',
+  components: {
+    LogOut, SearchBar,
+  },
   methods: {
     anchorHome: () => {
       router.push({ path: 'home' })
@@ -42,11 +45,8 @@ export default {
   }
 };
   
-
 </script>
 
-<style lang="scss">
-
-
+<style>
 
 </style>
