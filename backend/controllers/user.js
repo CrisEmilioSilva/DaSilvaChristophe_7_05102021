@@ -2,6 +2,7 @@
 
 const bcrypt = require('bcrypt'); 
 const jsonWebToken = require('jsonwebtoken');
+const fs = require('fs');
 const models = require('../models');
 
 /* Regex */
@@ -89,21 +90,38 @@ module.exports.getUserProfile = (req, res, next) => {
   });
 };
 
-module.exports.modifyUserProfile = async (req, res, next) => {
+module.exports.modifyUserProfile = (req, res, next) => {
   const userObject = req.file ? 
   {
-      ...JSON.parse(req.body.user),  
-      imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
-  } : { ...req.body }; 
+    ...req.body.user, 
+    imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+  } : { ...req.body };
   
-  await models.User.findOne({ where: {id: req.params.id} }) 
-  .then((user) => { if (user == user.id) { // ?
-    return res.status(401).json({ message: 'non autorisé' })}
+  models.User.findOne({ where: {id: req.params.id} }) 
+    .then((user) => {
       user.update({ ...userObject }, { where: {id: req.params.id} })
       .then(() => res.status(200).json({ message: 'Profil utilisateur modifié !'}))
-      .catch(error => res.status(403).json({ error }));
   })
+
+    .catch(error => res.status(403).json({ error: 'Requête non autorisé' }));
 };
 
+module.exports.deleteUserProfile =  (req, res, next) => {
+  models.User.findOne({ where: { id: req.params.id } })
+    .then(user => {    
+      if (user.dataValues.imageUrl !== null) {
+        
+        const filename = user.dataValues.imageUrl.split('/images/')[1]; 
+        fs.unlink(`images/${filename}`, () => { 
+        user.destroy({ where: { id: req.params.id } })
+        .then(() => res.status(200).json({ message: 'Profil utilisateur supprimé'}))
+          })
+      } else {
+        user.destroy({ where: { id: req.params.id } })
+        .then(() => res.status(200).json({ message: 'Profil utilisateur supprimé'}))
+      }
+  })
+    .catch(error => res.status(401).json({ error: 'Non Autorisé' }));  
+};
 
 

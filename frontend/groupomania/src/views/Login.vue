@@ -1,6 +1,6 @@
 <template>
   <div class="auth container-fluid d-flex flex-column align-items-center">  
-    <h1 class="h3 my-5 px-3 py-1 bg-white text-black border rounded-pill">Partagez et restez en contact avec votre entreprise !</h1>
+    <h1 class="h3 my-5 px-3 py-1 bg-white text-center text-black border rounded-pill">Partagez et restez en contact avec votre entreprise !</h1>
       <div class="card mt-5" style="width: 20rem; height: 20rem;">
         <form class="card-body text-center">
           <img class="logo pb-2" alt="Logo Groupomania" src="../assets/Logo/icon-left-font-monochrome-black.svg">
@@ -35,9 +35,12 @@
           <a @click="connectAccount" v-if="mode == 'login'" class="btn btn-primary w-75 mt-2">Se connecter</a>
           <a @click="inscription" v-if="mode == 'login'" class="btn btn-success w-75 my-2">S'inscrire</a>
           <a @click="createAccount"  class="btn btn-primary w-75 my-2" type="submit" v-if="mode == 'inscription'" >Créer un compte</a> <br>
-          <a @click="connection" v-if="mode == 'inscription'" class="w-75">Retour connexion</a>
-          <a v-if="mode == 'login'" class="">Mot de passe oublié ?</a>
+          <a @click="connection" v-if="mode == 'inscription'" class="w-75 text-decoration-none">Retour connexion</a>
+          <a v-if="mode == 'login'" class="text-decoration-none">Mot de passe oublié ?</a>
         </form>
+      </div>
+      <div class="pt-5">
+      <p>Copyright © 2021 Groupomania</p>
       </div>
   </div>
 </template>
@@ -84,7 +87,6 @@ export default {
         .then((res) => {
           localStorage.setItem('userId',res.data.userId)
           localStorage.setItem('token',res.data.token)
-          alert('Connexion réussie');
           router.push({ path: 'home' });
         })
         .catch((error)=>{
@@ -123,7 +125,7 @@ h1{
 }
 
 .auth{
-  height: 625px;
+  height: 670px;
   background-image: url('../assets/photo-connect.png');
 }
 

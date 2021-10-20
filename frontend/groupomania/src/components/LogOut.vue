@@ -1,5 +1,5 @@
 <template>
-  <a @click="disconnectAccount" class="btn btn-primary ms-2" >Déconnexion</a>
+  <a @click="disconnectAccount" class="btn" style="background-color: #e3f2fd;" >Déconnexion</a>
 </template>
 
 <script>

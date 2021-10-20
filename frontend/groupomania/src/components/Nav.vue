@@ -14,7 +14,7 @@
           <a @click="anchorHome" href="" class="nav-link" aria-current="page">Accueil</a>
         </li>
          <li class="nav-item">
-          <a @click="anchorProfile" href="" class="nav-link" aria-current="page">Profil</a>
+          <a @click="anchorProfile" href="" class="nav-link" aria-current="page">Mon Profil</a>
         </li> 
       </ul>
       <SearchBar/>

@@ -11,7 +11,8 @@ const userCtrl = require('../controllers/user');
 router.post('/signup', userCtrl.signup);
 router.post('/login', userCtrl.login);
 router.get('/profil/:id', auth, userCtrl.getUserProfile)
-router.put('/profil/:id', auth, userCtrl.modifyUserProfile)
+router.put('/profil/:id', auth, multer, userCtrl.modifyUserProfile)
+router.delete('/profil/:id', auth, userCtrl.deleteUserProfile);
 
 /* Exports */
 
