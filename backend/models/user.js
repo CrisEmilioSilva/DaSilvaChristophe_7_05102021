@@ -11,7 +11,8 @@ module.exports = (sequelize, DataTypes) => {
     */
     static associate(models) {
       // define association here
-      models.User.hasMany(models.Message)
+      models.User.hasMany(models.Message),
+      models.User.hasMany(models.Comment)
     }
   };
   User.init({
@@ -21,7 +22,7 @@ module.exports = (sequelize, DataTypes) => {
     password: DataTypes.STRING,
     job: DataTypes.STRING,
     bio: DataTypes.STRING,
-    imageUrl: DataTypes.STRING,
+    imageProfileUrl: DataTypes.STRING,
     admin: DataTypes.BOOLEAN
   }, {
     sequelize,

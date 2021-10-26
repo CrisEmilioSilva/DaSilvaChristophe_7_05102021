@@ -4,31 +4,30 @@ const models = require('../models');
 
 /* Exports */
 
+module.exports.getUserMessages = (req, res, next) => {
+  models.Message.findOne({ where: {id: req.params.id} })
+  .then((message) => {res.status(200).json(message);
+  })
+  .catch((error) => {res.status(404).json({error: error});
+  });
+};
+
 module.exports.createMessage = (req, res, next) => {
-    
-    const title = req.body.title;
-    const content = req.body.content;
-
-    if (title == null || content == null  ) {
-        return res.status(400).json({ 'error': 'Votre message doit contenir un titre et un contenu' });
-    }
-    
-    models.User.findOne({id: req.params.id})
-      .then((user) => {
-        
-        const message = models.Message.create({
-         title: title,
-         content: content,
-         likes: 0,
-         UserId: user.id
-        })
-
-        .then(() => res.status(200).json({message: 'Nouveau message créer'}))
-        .catch(error => res.status(400).json({ error }));
+  
+ 
+  models.User.findOne({id: req.params.id} ) 
+  .then((user) => {
+    models.Message.create({
+        content: req.body.content,
+        gif: req.file ? `${req.protocol}://${req.get('host')}/images/${req.file.filename}` : null,
+        likes: 0,
+        UserId: user.id
+      })
+      .then(() => res.status(200).json({ message: 'Profil utilisateur modifié !'}))
+      .catch((error) => {res.status(500).json({error: error});
     })
-
-    .catch((error) => {res.status(500).json({error: error});
-    })
+   
+  });
 };
 
 module.exports.getAllMessages = (req, res, next) => {
@@ -39,7 +38,7 @@ module.exports.getAllMessages = (req, res, next) => {
     const order   = req.params.order; // order : Récupération des messages par ordre particulier
 
     models.Message.findAll({
-      order: [(order != null) ? order.split(':') : ['title', 'ASC']],
+      order: [(order != null) ? order.split(':') : ['content', 'ASC']],
       attributes: (fields !== '*' && fields != null) ? fields.split(',') : null,
       limit: (!isNaN(limit)) ? limit : null,
       offset: (!isNaN(offset)) ? offset : null,

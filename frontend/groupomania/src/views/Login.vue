@@ -1,7 +1,13 @@
 <template>
   <div class="auth container-fluid d-flex flex-column align-items-center">  
     <h1 class="h3 my-5 px-3 py-1 bg-white text-center text-black border rounded-pill">Partagez et restez en contact avec votre entreprise !</h1>
-      <div class="card mt-5" style="width: 20rem; height: 20rem;">
+      <p v-if="errors.length" class="bg-danger text-white py-2 px-2 rounded">
+        <span>Veuillez corriger les erreurs suivantes :</span>
+        <ul>
+          <li v-for="error in errors" :key="error">{{ error }}</li>
+        </ul>
+      </p>
+      <div class="card mt-5 mb-5" style="width: 20rem; height: 20rem;">
         <form class="card-body text-center">
           <img class="logo pb-2" alt="Logo Groupomania" src="../assets/Logo/icon-left-font-monochrome-black.svg">
           <h2 v-if="mode == 'login'" class="card-title pt-2 h4 text-black border-top rounded">Se Connecter</h2>
@@ -9,38 +15,31 @@
           <div v-if="mode == 'inscription'" class="row mt-2" >
             <div class="col">
               <label for="inputFirstName" class="visually-hidden">FirstName</label>
-              <input v-model="firstName" type="text" class="form-control" id="inputFirstName" placeholder="Prénom">
+              <input v-model="firstName" type="text" class="form-control" id="inputFirstName" maxlength="13" placeholder="Prénom">
             </div>
             <div class="col">
               <label for="inputLastName" class="visually-hidden">LastName</label>
-              <input v-model="lastName" type="text" class="form-control" id="inputLastName" placeholder="Nom">
+              <input v-model="lastName" type="text" class="form-control" id="inputLastName" maxlength="13"  placeholder="Nom">
             </div>
           </div>
           <div class="row mt-2">
             <div class="col">
-              <label required for="inputEmail" class="visually-hidden">Email</label>
-              <input v-model="email" type="email" class="form-control" id="inputEmail" placeholder="Email">
-              <div class="email-errors">{{ errors }}</div>
+              <label for="inputEmail" class="visually-hidden">Email</label>
+              <input v-model="email" type="email" class="form-control" id="inputEmail" maxlength="40" placeholder="Email">
             </div>
-            
           </div>
           <div class="row mt-2">
             <div class="col">
               <label for="inputPassword" class="visually-hidden">Password</label>
-              <input v-model="password" type="password" class="form-control" id="inputPassword" placeholder="Password"> 
+              <input v-model="password" type="password" class="form-control" id="inputPassword" maxlength="25" placeholder="Password"> 
             </div>
-            <div class="password-errors"></div>
-          
           </div>
-          <a @click="connectAccount" v-if="mode == 'login'" class="btn btn-primary w-75 mt-2">Se connecter</a>
+          <a @click="connectAccount" v-if="mode == 'login'"  class="btn btn-primary w-75 mt-2">Se connecter</a>
           <a @click="inscription" v-if="mode == 'login'" class="btn btn-success w-75 my-2">S'inscrire</a>
           <a @click="createAccount"  class="btn btn-primary w-75 my-2" type="submit" v-if="mode == 'inscription'" >Créer un compte</a> <br>
           <a @click="connection" v-if="mode == 'inscription'" class="w-75 text-decoration-none">Retour connexion</a>
-          <a v-if="mode == 'login'" class="text-decoration-none">Mot de passe oublié ?</a>
+          <a v-if="mode == 'login'" href="#" class="text-decoration-none disabled" tabindex="-1" aria-disabled="true">Mot de passe oublié ?</a>
         </form>
-      </div>
-      <div class="pt-5">
-      <p>Copyright © 2021 Groupomania</p>
       </div>
   </div>
 </template>
@@ -53,7 +52,6 @@ import router from '../router'
 const instance = axios.create({
   baseURL: 'http://localhost:8000',
   timeout: 1000,
-  
 });
 
 export default {
@@ -66,7 +64,7 @@ export default {
     password: '',
     firstName: '',
     lastName: '',
-    errors: ''
+    errors: []
     }
   }, 
 
@@ -78,24 +76,71 @@ export default {
       this.mode = 'login'
     },
     connectAccount: function () {
+
       this.mode = 'login',
-      
+
+      this.errors = [];
+
+      const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+      if (!this.email || !emailRegex.test(this.email))
+      {
+        this.errors.push("Votre email ne peut pas être vide et doit être valide");
+      }
+
+      if (this.errors.length)
+      {
+        return true;
+      }
+
       instance.post('/api/users/login',{
         email : this.email,
         password : this.password,
+
         })
         .then((res) => {
+        
           localStorage.setItem('userId',res.data.userId)
           localStorage.setItem('token',res.data.token)
           router.push({ path: 'home' });
+        
         })
-        .catch((error)=>{
-          console.log(error)
-        }); 
+         .catch((error)=>{
+          console.log(error);
+        });
+        
     },
     createAccount: function () {
       this.mode = 'inscription',
-      
+
+      this.errors = [];
+
+      if (!this.firstName || this.firstName.length < 2) // Attribut maxlength="13" dans input firstName
+      {
+        this.errors.push("Votre prénom doit contenir entre 2 et 13 caractères");
+      }
+
+      if (!this.lastName || this.lastName.length < 2) // Attribut maxlength="13" dans input lasttName
+      {
+        this.errors.push("Votre nom doit contenir entre 2 et 13 caractères");
+      }
+
+      const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+      if (!this.email || !emailRegex.test(this.email))
+      {
+        this.errors.push("Votre email ne peut pas être vide et doit être valide");
+      }
+
+      const passwordRegex = /^[a-zA-Z]\w{3,14}$/;
+      if (!this.password || !passwordRegex.test(this.password))
+      {
+        this.errors.push("Votre mot de passe doit commencer par une lettre, être compris entre 3 et 15 caractères et contenir uniquement des lettres et des chiffres");
+      }
+
+      if (this.errors.length)
+      {
+        return true;
+      }
+
       instance.post('api/users/signup',{
         email : this.email,
         password : this.password,
@@ -116,6 +161,7 @@ export default {
 </script>
 
 <style scoped>
+
 h1{
   border: none;
 }
@@ -125,8 +171,7 @@ h1{
 }
 
 .auth{
-  height: 670px;
-  background-image: url('../assets/photo-connect.png');
+  width: 100%;
+  height: 100%;
 }
-
 </style>

@@ -20,7 +20,7 @@ module.exports.signup = (req, res, next) => {
   const lastName = req.body.lastName;
   const job = req.body.job;
   const bio = req.body.bio;
-  const imageUrl = req.body.imageUrl;
+  const imageProfileUrl = req.body.imageProfileUrl;
   
     if (firstName.length >= 13 && firstName.length <= 2) {
       return res.status(400).json({ 'error': 'Le prénom doit contenir entre 2 et 13 caractères' });
@@ -31,7 +31,7 @@ module.exports.signup = (req, res, next) => {
     }
     
     if (!emailRegex.test(email)) {
-      return res.status(400).json({ 'error': 'email invalide' });
+      return res.status(400).json({ 'error': 'Email invalide' });
     }
 
     if (!passwordRegex.test(password)) {
@@ -47,10 +47,10 @@ module.exports.signup = (req, res, next) => {
           lastName: lastName,
           job: job,
           bio: bio,
-          imageUrl: imageUrl,
+          imageProfileUrl: imageProfileUrl,
           admin: 0
         })
-        return res.status(201).json({message:'Nouvel utilisateur créer'});
+        return res.status(201).json({ message: 'Nouvel utilisateur créer' });
     }) 
        .catch(error => res.status(500).json({ error }));
 };
@@ -59,7 +59,7 @@ module.exports.login = (req, res, next) => {
     models.User.findOne({ where: {email: req.body.email} })
       .then( user => {
         if (!user) {
-          return res.status(401).json({ error: 'Email utilisateur non trouvé !' });
+          return res.status(401).json({ 'error': 'Email utilisateur non trouvé !' });
         }
         bcrypt.compare(req.body.password, user.password)
           .then(valid => {
@@ -82,6 +82,18 @@ module.exports.login = (req, res, next) => {
 
 /* Exports - Requète User */
 
+// Get user profile
+
+module.exports.getAllUser = (req, res, next) => {
+  models.User.findAll({attributes: ['id','firstName','lastName','job','imageProfileUrl']})
+  .then((users) => {res.status(200).json(users);
+  })
+  .catch((error) => {res.status(400).json({error: error});
+  });
+};
+
+// Get user profile
+
 module.exports.getUserProfile = (req, res, next) => {
   models.User.findOne({ where: {id: req.params.id} })
   .then((user) => {res.status(200).json(user);
@@ -90,11 +102,13 @@ module.exports.getUserProfile = (req, res, next) => {
   });
 };
 
+// Put user profile
+
 module.exports.modifyUserProfile = (req, res, next) => {
   const userObject = req.file ? 
   {
     ...req.body.user, 
-    imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+    imageProfileUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
   } : { ...req.body };
   
   models.User.findOne({ where: {id: req.params.id} }) 
@@ -103,25 +117,27 @@ module.exports.modifyUserProfile = (req, res, next) => {
       .then(() => res.status(200).json({ message: 'Profil utilisateur modifié !'}))
   })
 
-    .catch(error => res.status(403).json({ error: 'Requête non autorisé' }));
+    .catch((error) => res.status(403).json({ error: 'Requête non autorisé' }));  
 };
 
+// Delete user profile
+
 module.exports.deleteUserProfile =  (req, res, next) => {
-  models.User.findOne({ where: { id: req.params.id } })
+  
+  models.User.findOne({ where: {id: req.params.id} })
     .then(user => {    
-      if (user.dataValues.imageUrl !== null) {
-        
-        const filename = user.dataValues.imageUrl.split('/images/')[1]; 
+      if (user.dataValues.imageProfileUrl !== null) {
+        const filename = user.dataValues.imageProfileUrl.split('/images/')[1];
         fs.unlink(`images/${filename}`, () => { 
-        user.destroy({ where: { id: req.params.id } })
-        .then(() => res.status(200).json({ message: 'Profil utilisateur supprimé'}))
+        user.destroy({ where: {id: req.params.id} })
+        .then(() => res.status(200).json({ message: 'Profil utilisateur supprimé' }))
           })
       } else {
-        user.destroy({ where: { id: req.params.id } })
-        .then(() => res.status(200).json({ message: 'Profil utilisateur supprimé'}))
+        user.destroy({ where: {id: req.params.id} })
+        .then(() => res.status(200).json({ message: 'Profil utilisateur supprimé' }))
       }
   })
-    .catch(error => res.status(401).json({ error: 'Non Autorisé' }));  
+    .catch(error => res.status(401).json({ error: 'Requête non autorisé' }));  
 };
 
 

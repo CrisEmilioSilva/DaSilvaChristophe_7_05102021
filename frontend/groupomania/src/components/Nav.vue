@@ -1,5 +1,5 @@
 <template>
-  <nav class="navbar navbar-light navbar-expand-md" style="background-color: #e3f2fd;">
+  <nav class="navbar navbar-light navbar-expand-sm bg-white border-bottom">
   <div class="container-fluid">
     <a class="navbar-brand">
       <img src="../assets/Logo/icon.svg" alt="Logo Groupomania" width="50" height="34">

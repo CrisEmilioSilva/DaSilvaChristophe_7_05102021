@@ -34,7 +34,7 @@ module.exports = {
         allowNull: true,
         type: Sequelize.STRING
       },
-      imageUrl: {
+      imageProfileUrl: {
         allowNull: true,
         type: Sequelize.STRING
       },

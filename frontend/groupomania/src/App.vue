@@ -17,5 +17,14 @@ export default {
 </script>
 
 <style>
+body {
+  background-image: url('./assets/background.png');
+  
+}
 
+#app {
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+}
 </style>
