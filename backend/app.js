@@ -4,6 +4,8 @@ const express = require('express');
 const app = express();
 const userRoutes = require('./routes/user');
 const messageRoutes = require('./routes/message');
+const likeRoutes = require('./routes/like');
+const commentRoutes = require('./routes/comment');
 const path = require('path');
 
 
@@ -21,9 +23,10 @@ app.use(express.urlencoded({extended:true}));
 
 app.use('/api/users', userRoutes);
 app.use('/api/messages', messageRoutes);
+app.use('/api/messages/like', likeRoutes);
+app.use('/api/messages/comment', commentRoutes);
 
-
-app.use('/images', express.static(path.join(__dirname, 'images'))); // Indique à Express qu'il faut gérer la ressource images de manière statique
+app.use('/images', express.static(path.join(__dirname, 'images'))); // Indique à Express qu'il faut gérer la ressource image de manière statique
 
 
 app.listen(process.env.PORT, () => {

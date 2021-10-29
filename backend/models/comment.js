@@ -22,8 +22,9 @@ module.exports = (sequelize, DataTypes) => {
         }
       })
     }
-  };
+  }; 
   Comment.init({
+  
     content: DataTypes.STRING
   }, {
     sequelize,
