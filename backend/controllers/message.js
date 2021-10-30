@@ -30,17 +30,14 @@ module.exports.getAllMessages = (req, res, next) => {
     
   const fields  = req.params.fields; // Récupération dans les paramètres de l'url : fields permet de séléctionner les valeurs que l'on souhaite afficher
   const order   = req.params.order; // order : Récupération des messages par ordre particulier
-  var limit   = parseInt(req.query.limit);
-  var offset  = parseInt(req.query.offset);
+  
   models.Message.findAll({
     order: [(order != null) ? order.split(':') : ['createdAt', 'DESC']],
     attributes: (fields !== '*' && fields != null) ? fields.split(',') : null,
-    limit: (!isNaN(limit)) ? limit : null,
-    offset: (!isNaN(offset)) ? offset : null,
-    include: [{
+    include: {
       model: models.User,
-      attributes: ['firstName','lastName','job']
-    }]
+      attributes: ['firstName','lastName','imageProfileUrl','job']
+    }
   })
   .then(function(messages) {
     if (messages) {
@@ -76,8 +73,10 @@ module.exports.updateMessage = (req, res, next) => {
 module.exports.deleteMessage =  (req, res, next) => {
   
   models.Message.findOne({ where: {id: req.params.id} })
-    .then(message => {    
+    .then(message => {  
+      console.log(message);
       if (message.dataValues.gif !== null) {
+        console.log(message.dataValues.gif);
         const filename = message.dataValues.gif.split('/images/')[1];
         fs.unlink(`images/${filename}`, () => { 
         message.destroy({ where: {id: req.params.id} })
@@ -88,7 +87,7 @@ module.exports.deleteMessage =  (req, res, next) => {
         .then(() => res.status(200).json({ message: 'Message supprimé' }))
       }
   })
-    .catch(error => res.status(403).json({ error: 'Requête non autorisé' }));  
+    .catch(error =>console.log(error))  // res.status(403).json({ error }));  
 };
 
 // A voir

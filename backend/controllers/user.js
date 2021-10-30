@@ -47,7 +47,7 @@ module.exports.signup = (req, res, next) => {
                 password: hash,
                 firstName: firstName,
                 lastName: lastName,
-                imageProfileUrl: "http://localhost:8000/images/avatar.png",
+                imageProfileUrl: req.body.imageProfileUrl,
                 admin: 0,
               })
                 return res.status(201).json({ message: 'Nouvel utilisateur créer' });
@@ -59,7 +59,7 @@ module.exports.signup = (req, res, next) => {
        
 module.exports.login = (req, res, next) => {
     models.User.findOne({ where: {email: req.body.email} })
-      .then( user => {
+      .then(user => {
         if (!user) {
           return res.status(401).json({ 'error': 'Email inconnu !' });
         }

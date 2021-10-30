@@ -11,7 +11,18 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      models.User.belongsToMany(models.Message,{
+      models.Comment.belongsTo(models.User,{
+        foreignKey: {
+        allowNull: false
+        }
+      }),
+      models.Comment.belongsTo(models.Message,{
+        foreignKey: {
+        allowNull: false
+        }
+      })
+      
+      /*models.User.belongsToMany(models.Message,{
         through: models.Like,
         foreignKey: 'userID',
         otherKey: 'messageId',
@@ -21,7 +32,7 @@ module.exports = (sequelize, DataTypes) => {
         through: models.Like,
         foreignKey: 'messageId',
         otherKey: 'userID',
-      });
+      }); 
 
       models.Like.belongsTo(models.User,{
         foreignKey: 'userID',
@@ -31,11 +42,11 @@ module.exports = (sequelize, DataTypes) => {
       models.Like.belongsTo(models.Message,{
         foreignKey: 'messageId',
         as: 'message',
-      });
+      });*/
     }
   };
   Like.init({
-    messageId: { 
+  /*  messageId: { 
     type: DataTypes.INTEGER,
     references: {
       model: 'Message',
@@ -49,7 +60,7 @@ module.exports = (sequelize, DataTypes) => {
       model: 'User',
       key: 'id'
     }
-  },
+  }, */
 },{
     sequelize,
     modelName: 'Like',

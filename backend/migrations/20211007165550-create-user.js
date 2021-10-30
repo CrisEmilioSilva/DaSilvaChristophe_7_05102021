@@ -35,8 +35,7 @@ module.exports = {
         type: Sequelize.STRING
       },
       imageProfileUrl: {  
-        allowNull: false,
-        default: "http://localhost:8000/images/avatar.png",
+        allowNull: true,
         type: Sequelize.STRING
       },
       admin: {

@@ -12,8 +12,7 @@ export default {
   methods: {
     
     disconnectAccount: function () {
-      localStorage.removeItem('userId')
-      localStorage.removeItem('token')
+      localStorage.clear();
       router.push({ path: '/' });
     },
   }

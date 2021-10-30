@@ -3,7 +3,7 @@
     <Nav/>
     <div class="container">
       <div class="d-flex justify-content-center">
-        <h1 class="text-center w-50 h2 mt-3 py-2 bg-white rounded shadow">Mon profil</h1>
+        <h1 class="text-center w-50 h2 mt-3 py-2 bg-white rounded-pill shadow">Mon Profil</h1>
       </div>
       <p v-if="errors.length" class="bg-danger text-white py-2 px-2 rounded">
         <span>Veuillez corriger les erreurs suivantes :</span>
@@ -11,15 +11,17 @@
           <li v-for="error in errors" :key="error">{{ error }}</li>
         </ul>
       </p>
-      <div class="row d-flex justify-content-center">
+      <div class="row d-flex justify-content-center align-items-center">
         <div class="card mx-4 my-4 text-center rounded shadow" style="width: 18rem;">
           <h2 class="card-title h4 mt-3 mb-3 text-decoration-underline">Photo de profil</h2>
           <img :src="imageProfileUrl" class="card-img-top" alt="Photo de profil" style="height: 12rem;">
           <form class="card-body border pt-4 mb-2">
               <label for="file" class="form-label fw-bold ">Changer ma photo de profil</label>
-              <input @change="fileSelected" ref="file" type="file" id="file" name="file" accept="image/*" class="form-control">
-              <a @click="modificationPictureProfile" class="card-link btn btn-outline-primary w-50 mt-2">Publier</a>
+              <input @change="fileSelected" ref="file" type="file" id="file" name="file" accept=".png, .jpg" class="form-control btn btn-outline-primary">
           </form>
+          <div class="mb-2">
+          <a @click="modificationPictureProfile" class="card-link btn btn-primary rounded-pill w-50 ">Publier</a>
+          </div>
         </div>
         <div class="card mx-4 my-4 rounded shadow" style="width: 18rem;">
           <div v-if="mode == 'profile'" class="card-body text-center">
@@ -29,9 +31,9 @@
             <p class="card-text">Poste : {{ job }}</p>
             <p class="card-text">Email : {{ email }}</p>
               <h3 class="card-title h5 text-decoration-underline">Bio</h3>
-              <p class="card-text"> {{ bio }} </p>
-            <a @click="modificationProfile" v-if="mode == 'profile'" class="btn btn-primary">Modifier</a>
-            <a @click="deleteProfile" v-if="mode == 'profile'" class="btn btn-danger mt-2">Supprimer mon profil</a>
+              <p class="card-text bio"> Parle nous de toi {{ firstName }} 😊 : <br> {{ bio }} </p>
+            <a @click="modificationProfile" v-if="mode == 'profile'" class="btn btn-primary rounded-pill">Modifier</a>
+            <a @click="deleteProfile" v-if="mode == 'profile'" class="btn btn-danger rounded-pill mt-2">Supprimer mon profil</a>
           </div>
           <form v-if="mode == 'modificationProfile'" class="card-body text-center">
            <h2 class="card-title mb-3 h4 text-decoration-underline">Je modifie mes informations</h2>
@@ -63,7 +65,8 @@
               <h3 class="h5 text-decoration-underline">Bio</h3>
               <textarea v-model="bio" maxlength="120" class="form-control"></textarea>
             </div>
-            <a @click="updateProfile" v-if="mode == 'modificationProfile'" class="btn btn-primary" >Modifier</a>
+            <a @click="updateProfile" v-if="mode == 'modificationProfile'" class="btn btn-primary mb-1 rounded-pill" >Modifier</a><br>
+            <a @click="backProfile" v-if="mode == 'modificationProfile'" href="#" class="w-75 text-decoration-none">Retour profil</a>
           </form>
         </div>
       </div> 
@@ -111,8 +114,8 @@ export default {
       }    
   },
 
-  created: function () {
-    instance.get(`/api/users/profil/${this.userId}`)
+   beforeMount: function () {
+    instance.get(`/api/users/${this.userId}`)
       .then(res => { 
         this.firstName = res.data.firstName, 
         this.lastName = res.data.lastName,
@@ -123,18 +126,20 @@ export default {
       })
       .catch((error)=>{
           console.log(error)
-      }); 
+      });  
   },
   
   methods: {
-    
+
     profile: function () {
       this.mode = 'profile'
     },
     modificationProfile: function () {
       this.mode = 'modificationProfile'
     },
-    
+    backProfile: function () {
+      this.mode = 'profile'
+    },
     updateProfile: function () {
       this.errors = [];
 
@@ -147,7 +152,7 @@ export default {
       {
         this.errors.push("Votre nom doit contenir entre 2 et 13 caractères");
       }
-
+      /* eslint-disable */
       const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
       if (!this.email || !emailRegex.test(this.email))
       {
@@ -159,9 +164,10 @@ export default {
         return true;
       }
 
-      instance.put(`/api/users/profil/${this.userId}`, {
+      instance.put(`/api/users/${this.userId}`, {
         firstName: this.firstName, 
         lastName: this.lastName,
+        email: this.email,
         job: this.job, 
         bio: this.bio,
       })
@@ -188,26 +194,30 @@ export default {
         const fd = new FormData();
         fd.append('image', this.file )
         
-        instance.put(`http://localhost:8000/api/users/profil/${this.userId}`, fd, {
+        instance.put(`http://localhost:8000/api/users/${this.userId}`, fd, {
           headers:  {
                       'Content-Type': 'multipart/form-data'
                     }  
         })
         .then((res) => {
-            console.log(res);
+          alert('Votre photo de profil a bien été modifié');
+          console.log(res);
         })
         .catch((error)=>{
-            console.log(error)
+          console.log(error)
         });
       },
 
     deleteProfile: function () {
       
-      instance.delete(`/api/users/profil/${this.userId}`)
-        .then((res) => { 
-          localStorage.removeItem('userId',res.data.userId)
-          localStorage.removeItem('token',res.data.token)
-          alert('Votre profil a bien été supprimé !');
+      if (!window.confirm ('Votre profil va être supprimé ! Cliquez sur OK pour confirmer ou ANNULER pour annuler la demande !')){
+          return router.push({ path: '/profile' });
+      } 
+      
+      instance.delete(`/api/users/${this.userId}`)
+        .then(() => { 
+          localStorage.clear();
+          alert('Votre profil a bien été supprimé !')
           router.push({ path: '/' });
         })
         .catch((error)=>{
