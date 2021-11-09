@@ -1,7 +1,7 @@
 <template>
   <div class="container-fluid d-flex flex-column align-items-center w-100 h-100">  
     <h1 class="h3 my-5 px-3 py-2 bg-white text-black text-center rounded-pill shadow">Partagez et restez en contact avec vos collègues d'entreprise !</h1>
-      <p v-if="errors.length" class="bg-danger text-white py-2 px-2 rounded">
+      <p v-if="errors.length" class="w-75 bg-danger text-white py-2 px-2 rounded shadow">
         <span>Veuillez corriger les erreurs suivantes :</span>
         <ul>
           <li v-for="error in errors" :key="error">{{ error }}</li>
@@ -50,7 +50,8 @@ import axios from'axios'
 import router from '../router'
 
 const instance = axios.create({
-  baseURL: 'http://localhost:8000'
+  baseURL: 'http://localhost:8000',
+  setTimeout: 1000,
 });
 
 export default {
@@ -68,12 +69,15 @@ export default {
   }, 
 
   methods: {
+    
     inscription: function () {
       this.mode = 'inscription'
     },
+    
     connection: function () {
       this.mode = 'login'
     },
+    
     createAccount: function () {
       
       this.mode = 'inscription',
@@ -102,7 +106,6 @@ export default {
         this.errors.push("Votre mot de passe ne peut pas être vide et doit commencer par une lettre, être compris entre 3 et 15 caractères et contenir uniquement des lettres et des chiffres");
       }
       
-
       if (this.errors.length)
       {
         return true;
@@ -113,16 +116,17 @@ export default {
         password : this.password,
         firstName : this.firstName,
         lastName : this.lastName
-        })
-        .then((res) => {
-          alert('Inscription réussie !');       
-          this.mode = 'login'
-        })
-        .catch((error)=>{
-          this.errors.push("Cette adresse mail a déja un compte");
-          console.log(error)
-        });
+      })
+      .then((res) => {
+        alert('Inscription réussie !');       
+        this.mode = 'login'
+      })
+      .catch((error)=>{
+        this.errors.push("Cette adresse mail a déja un compte");
+        console.log(error)
+      });
     },
+    
     connectAccount: function () {
 
       this.mode = 'login',
@@ -148,16 +152,16 @@ export default {
       instance.post('/api/users/login',{
         email : this.email,
         password : this.password,
-        })
-        .then((res) => {
-          localStorage.setItem('userId',res.data.userId)
-          localStorage.setItem('token',res.data.token)
-          router.push({ path: 'home' });
-        })
-         .catch((error)=>{
-          console.log(error);
-        });
-        
+      })
+      .then((res) => {
+        localStorage.setItem('userId',res.data.userId)
+        localStorage.setItem('token',res.data.token)
+        router.push({ path: 'home' });
+      })
+      .catch((error)=>{
+        this.errors.push("Mot de passe incorrect !");
+        console.log(error);
+      });        
     },
   }
 }
@@ -165,7 +169,9 @@ export default {
 </script>
 
 <style scoped>
+
 .logo{
   width: 150px;
 }
+
 </style>

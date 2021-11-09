@@ -20,7 +20,7 @@
               <input @change="fileSelected" ref="file" type="file" id="file" name="file" accept=".png, .jpg" class="form-control btn btn-outline-primary">
           </form>
           <div class="mb-2">
-          <a @click="modificationPictureProfile" class="card-link btn btn-primary rounded-pill w-50 ">Publier</a>
+          <a @click="modificationPictureProfile" class="card-link btn btn-primary rounded-pill w-75 ">Confirmer Modification</a>
           </div>
         </div>
         <div class="card mx-4 my-4 rounded shadow" style="width: 18rem;">
@@ -79,6 +79,7 @@
 import Nav from '../components/Nav.vue'
 import axios from 'axios'
 import router from '../router'
+import notImgProfile from "../assets/avatar.png"
 
 const token = localStorage.getItem('token');
 
@@ -88,7 +89,7 @@ const instance = axios.create({
                   "Content-Type": "application/json",
                   "Accept": "application/json", 
                   "Authorization": "Bearer " + token,
-            }
+          },
 });
 
 export default {
@@ -101,7 +102,6 @@ export default {
   data: function (){
     return { 
       userId: localStorage.getItem('userId'),
-      token: localStorage.getItem('token'),
       mode: 'profile',
       firstName : '',
       lastName:'',
@@ -110,37 +110,47 @@ export default {
       bio:'',
       imageProfileUrl: '',
       file:'',
-      errors: []
+      notImgProfile,
+      errors: [],
       }    
   },
 
-   beforeMount: function () {
+  mounted: function () {
+    
     instance.get(`/api/users/${this.userId}`)
-      .then(res => { 
-        this.firstName = res.data.firstName, 
-        this.lastName = res.data.lastName,
-        this.email = res.data.email,
-        this.job = res.data.job,
-        this.bio = res.data.bio,
+    .then(res => { 
+      this.firstName = res.data.firstName, 
+      this.lastName = res.data.lastName,
+      this.email = res.data.email,
+      this.job = res.data.job,
+      this.bio = res.data.bio
+      if(res.data.imageProfileUrl == null){
+        this.imageProfileUrl = notImgProfile
+      } else {
         this.imageProfileUrl = res.data.imageProfileUrl
-      })
-      .catch((error)=>{
-          console.log(error)
-      });  
+      }
+    })
+    .catch((error)=>{
+      console.log(error)
+    });  
   },
-  
+ 
   methods: {
 
     profile: function () {
       this.mode = 'profile'
     },
+    
     modificationProfile: function () {
       this.mode = 'modificationProfile'
     },
+    
     backProfile: function () {
       this.mode = 'profile'
     },
+    
     updateProfile: function () {
+      
       this.errors = [];
 
       if (!this.firstName || this.firstName.length < 2) // Attribut maxlength="13" dans input firstName
@@ -163,7 +173,7 @@ export default {
       {
         return true;
       }
-
+      
       instance.put(`/api/users/${this.userId}`, {
         firstName: this.firstName, 
         lastName: this.lastName,
@@ -171,8 +181,7 @@ export default {
         job: this.job, 
         bio: this.bio,
       })
-      .then((res) => { 
-        console.log(res);
+      .then(() => { 
         this.mode = 'profile'
       })
       .catch((error)=>{
@@ -186,43 +195,42 @@ export default {
       reader.readAsDataURL(this.file);
       reader.onload = e =>{
       this.imageProfileUrl = e.target.result;
-      console.log(this.imageProfileUrl);}
+      }
     },
 
     modificationPictureProfile: function () {
+      
+      const fd = new FormData();
+      fd.append('image', this.file )
         
-        const fd = new FormData();
-        fd.append('image', this.file )
-        
-        instance.put(`http://localhost:8000/api/users/${this.userId}`, fd, {
-          headers:  {
-                      'Content-Type': 'multipart/form-data'
-                    }  
-        })
-        .then((res) => {
-          alert('Votre photo de profil a bien été modifié');
-          console.log(res);
-        })
-        .catch((error)=>{
-          console.log(error)
-        });
-      },
+      instance.put(`api/users/${this.userId}`, fd, {
+        headers:  {
+                      'Content-Type': 'multipart/form-data',
+                  },
+      })
+      .then(() => {
+        alert('Votre photo de profil a bien été modifié');
+      })
+      .catch((error)=>{
+        console.log(error)
+      });
+    },
 
     deleteProfile: function () {
       
       if (!window.confirm ('Votre profil va être supprimé ! Cliquez sur OK pour confirmer ou ANNULER pour annuler la demande !')){
-          return router.push({ path: '/profile' });
+        return router.push({ path: 'profile' });
       } 
       
       instance.delete(`/api/users/${this.userId}`)
-        .then(() => { 
-          localStorage.clear();
-          alert('Votre profil a bien été supprimé !')
-          router.push({ path: '/' });
-        })
-        .catch((error)=>{
-          console.log(error)
-        }); 
+      .then(() => { 
+        localStorage.clear();
+        alert('Votre profil a bien été supprimé !')
+        router.push({ path: '/' });
+      })
+      .catch((error)=>{
+        console.log(error)
+      }); 
     },
   },
 }
@@ -230,12 +238,6 @@ export default {
 </script>
 
 <style scoped>
-
-#app {
-    box-sizing: border-box;
-    width: 100%;
-    height: 100%;
-}
 
 .card-img-top {
   object-fit: cover;

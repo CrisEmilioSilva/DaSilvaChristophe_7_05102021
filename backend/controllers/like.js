@@ -9,9 +9,16 @@ module.exports.likes = (req, res, next) => {
   .then((message) => {
     // Controle de l'utilisateur pour qu'il ne puisse liké qu'une fois a faire
       message.increment({ 'likes': 1})
-      .then(() => res.status(200).json({ message: 'Message Liké !'}))
+      .then((like) => {
+        console.log(like);
+        models.Like.create({
+          MessageId : message.id,
+          UserId: message.dataValues.UserId,
+      })
+      .then(() => res.status(200).json({ message: 'Liké !'}))
+      .catch(error => res.status(401).json({ error: error}));
+    })
   })
-  .catch(error => res.status(401).json({ error: 'Erreur Like' }));
 };
 
 module.exports.unlikes = (req, res, next) => {

@@ -12,14 +12,12 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       models.Comment.belongsTo(models.User,{
-        foreignKey: {
-        allowNull: false
-        }
+        foreignKey: "userId",
+        allowNull: false,
       }),
       models.Comment.belongsTo(models.Message,{
-        foreignKey: {
-        allowNull: false
-        }
+        foreignKey: "messageId",
+        allowNull: false,
       })
       
       /*models.User.belongsToMany(models.Message,{

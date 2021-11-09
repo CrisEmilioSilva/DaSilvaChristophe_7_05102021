@@ -71,8 +71,8 @@ module.exports.login = (req, res, next) => {
             res.status(200).json({
               userId: user.id,
               token: jsonWebToken.sign (
-                { userId: user.id } ,
-                `${process.env.TOKEN_SECRET}`,
+                { userId: user.id },
+                'TOKEN_SECRET',
                 { expiresIn: '24h' }
               )
             });
@@ -90,7 +90,7 @@ module.exports.getAllUser = (req, res, next) => {
   models.User.findAll({ attributes: ['id','firstName','lastName','email','job','bio','imageProfileUrl'] })
   .then((users) => {res.status(200).json(users);
   })
-  .catch((error) => {res.status(400).json({error: 'Echec de la rêquete'});
+  .catch((error) => {res.status(400).json({ error });
   });
 };
 

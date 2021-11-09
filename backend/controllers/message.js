@@ -55,12 +55,14 @@ module.exports.getAllMessages = (req, res, next) => {
 module.exports.updateMessage = (req, res, next) => {
   const messageObject = req.file ? 
   {
-    ...req.body.message, 
+    ...req.body.message,
+    
     gif: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
   } : { ...req.body };
-  
+  console.log(req.body);
   models.Message.findOne({ where: {id: req.params.id} }) 
     .then((message) => {
+      console.log(message);
       message.update({ ...messageObject }, { where: {id: req.params.id} })
       .then(() => res.status(200).json({ message: 'Message modifié !'}))
   })
@@ -93,9 +95,9 @@ module.exports.deleteMessage =  (req, res, next) => {
 // A voir
 
 
-module.exports.getUserMessages = (req, res, next) => {
+module.exports.getUserMessage = (req, res, next) => {
   models.Message.findOne({ where: {id: req.params.id} })
-  .then((messages) => {res.status(200).json(messages);
+  .then( (message) => {res.status(200).json(message);
   })
   .catch((error) => {res.status(404).json({error: error});
   });

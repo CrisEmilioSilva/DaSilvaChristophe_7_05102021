@@ -9,10 +9,11 @@ const commentCtrl = require('../controllers/comment');
 
 /* Routes */
 
-router.post('/new/:id',auth, multer, commentCtrl.createComment)
-router.get('/:id', auth, commentCtrl.getAllComments)
+router.post('/new/:id',auth, commentCtrl.createComment)
+router.get('/', auth, commentCtrl.getAllComments)
+router.get('/:id', auth, commentCtrl.getComment)
 router.put('/:id',auth, commentCtrl.updateComment)
-router.delete('/:id',auth, multer, commentCtrl.deleteComment)
+router.delete('/:id',auth, commentCtrl.deleteComment)
 
 /* Exports */
 

@@ -10,13 +10,11 @@
 <script>
 export default {
   name: 'App',
-  components: {
-
-  }
 }
 </script>
 
 <style>
+
 body {
   background-image: url('./assets/background.png');
 }
@@ -26,4 +24,5 @@ body {
   width: 100%;
   height: 100%;
 }
+
 </style>

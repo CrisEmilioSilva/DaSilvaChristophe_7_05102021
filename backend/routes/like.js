@@ -8,7 +8,7 @@ const likesCtrl = require('../controllers/like');
 
 /* Routes */
 
-router.post('/:id/liked', likesCtrl.likes);
+router.post('/:id/liked', auth, likesCtrl.likes);
 router.post('/:id/disliked', auth, likesCtrl.unlikes);
 
 /* Exports */

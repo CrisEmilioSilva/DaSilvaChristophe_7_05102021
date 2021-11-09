@@ -5,7 +5,7 @@
         <img :src="gif" class="card-img-top obj-fit mt-2 w-100" alt="Gif" style="height: 12rem;">
         <input v-model="content" type="text" maxlength="250" class="form-control w-100" id="inputPostMessage" placeholder="Partager avec vos collègues en écrivant une publication" style="height: 3rem;">  
         <input @change="fileSelected" ref="file" type="file" id="file" name="file" accept=".png, .jpg" class="card-link form-control mt-2">
-        <a @click="postMessage" class="card-link btn btn-primary w-75 mt-2">Publier</a>
+        <a @click="postMessage" class="card-link btn btn-outline-primary w-75 mt-2">Publier</a>
     </div>
   </form>
  </div>
@@ -33,6 +33,10 @@ export default {
   data() {
     return {
       userId: localStorage.getItem('userId'),
+      imageProfileUrl: '',
+      firstName: '',
+      lastName:'',
+      job:'',
       content:'',
       gif: '',
       file:''
@@ -40,24 +44,42 @@ export default {
   },
 
   mounted: function () {
-      
-    instance.get(`/api/messages`, {
-      headers: {
-                "Content-Type": "application/json",
-                "Accept": "application/json", 
-                "Authorization": "Bearer " + token,
-              }
-    })
-    .then(res => {  
-      if(res.data.gif == null){
-        this.gif= notGifProfile
-      } else {
-        this.gif = res.data.gif
-      }
-    })
-    .catch((error)=>{
-      console.log(error)
-    });
+       const token = localStorage.getItem('token')
+      instance.get(`/api/users/${this.userId}`, {
+        headers: {
+                  "Content-Type": "application/json",
+                  "Accept": "application/json", 
+                  "Authorization": "Bearer " + token,
+                }
+      })
+      .then(res => { 
+        this.firstName = res.data.firstName, 
+        this.lastName = res.data.lastName,
+        this.job = res.data.job,
+        this.userId = res.data.id,
+        this.imageProfileUrl = res.data.imageProfileUrl
+      })
+      .catch((error)=>{
+        console.log(error)
+      });
+
+      instance.get(`/api/messages`, {
+        headers: {
+                  "Content-Type": "application/json",
+                  "Accept": "application/json", 
+                  "Authorization": "Bearer " + token,
+                }
+      })
+      .then(res => {  
+        if(res.data.gif == null){
+          this.gif= notGifProfile
+        } else {
+          this.gif = res.data.gif
+        }
+      })
+      .catch((error)=>{
+        console.log(error)
+      });
   },
 
   methods: {
@@ -81,8 +103,9 @@ export default {
                     'Content-Type': 'multipart/form-data'
                   }  
       })
-      .then(() => {
-       location.reload();
+      .then((res) => {
+        location.reload();
+        console.log(res);
       })
       .catch((error)=>{
         console.log(error)

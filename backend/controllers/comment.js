@@ -7,38 +7,57 @@ const models = require('../models');
 // Post Comment
 
 module.exports.createComment = (req, res, next) => {
-    models.Message.findOne({ where: {id: req.params.id} }) 
-    .then((message) => {
-        const UserId = message.dataValues.UserId;
-        const MessageId = message.dataValues.id;
-        models.Comment.create({
-            content: req.body.content,
-            UserId: UserId,
-            MessageId: MessageId
-          })
-          .then(() => res.status(200).json({ message: 'Nouveau commentaire créer !'}))
-          .catch((error) => {res.status(400).json({error});
+  models.Message.findOne({ where: {id: req.params.id} }) 
+  .then((message) => {
+    console.log(message);
+      models.Comment.create({
+          commentaire: req.body.commentaire,
+          MessageId: message.dataValues.id,
+          UserId: req.body.UserId
         })
+        .then(() => res.status(200).json({ message: 'Nouveau commentaires créer !'}))
+        .catch((error) => {res.status(400).json({'error': 'Création du commentaires échoué'});
+      })
     })
     .catch((error) => {res.status(500).json({error: error})
-    }); 
-};
+    });
+  };
 
 
 // Get All Comments
 
 module.exports.getAllComments = (req, res, next) => {
+
+  const fields  = req.params.fields; // Récupération dans les paramètres de l'url : fields permet de séléctionner les valeurs que l'on souhaite afficher
+  const order   = req.params.order; // order : Récupération des messages par ordre particulier
     models.Comment.findAll({ 
-        attributes: ['id','content'],
+      order: [(order != null) ? order.split(':') : ['createdAt', 'DESC']],
+      attributes: (fields !== '*' && fields != null) ? fields.split(',') : null,
         include: [{
             model: models.User,
-            attributes: ['firstName','lastName','imageProfileUrl']
-        }]
+            attributes: ['firstName','lastName','imageProfileUrl'],
+        }]   
     })
-    .then((comments) => {res.status(200).json(comments);
+    .then(function(comments) {
+      console.log(comments);
+      if (comments) {
+        res.status(200).json(comments);
+      } else {
+        res.status(404).json({ 'error': 'Commentaires non trouvé' });
+      }
     })
     .catch((error) => {res.status(400).json({error: 'Echec de la rêquete'});
     });
+};
+
+// Get Comment
+
+module.exports.getComment = (req, res, next) => {
+  models.Comment.findOne({ where: {id: req.params.id} })
+  .then((comment) => {res.status(200).json(comment);
+  })
+  .catch((error) => {res.status(404).json({error: error});
+  });
 };
 
 // Put Commentaire

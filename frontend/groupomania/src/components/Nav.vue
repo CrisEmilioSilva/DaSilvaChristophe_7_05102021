@@ -14,10 +14,9 @@
           <a @click="anchorHome" href="" class="nav-link" aria-current="page">Accueil</a>
         </li>
          <li class="nav-item">
-          <a @click="anchorProfile" href="" class="nav-link" aria-current="page">Mon Profil</a>
+          <a @click="anchorProfile" href="" class="nav-link" aria-current="page">Profil</a>
         </li> 
       </ul>
-      <SearchBar/>
       <LogOut/>
     </div>
   </div>
@@ -27,18 +26,21 @@
 <script>
 
 import LogOut from '../components/LogOut.vue'
-import SearchBar from '../components/SearchBar.vue'
 import router from '../router'
 
 export default {
 	name: 'Nav',
+  
   components: {
-    LogOut, SearchBar,
+    LogOut,
   },
+  
   methods: {
+    
     anchorHome: () => {
       router.push({ path: 'home' })
     },
+    
     anchorProfile: () => {
       router.push({ path: 'profile' })
     }
@@ -46,7 +48,3 @@ export default {
 };
   
 </script>
-
-<style>
-
-</style>
