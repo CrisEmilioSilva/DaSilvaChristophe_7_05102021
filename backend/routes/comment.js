@@ -3,9 +3,7 @@
 const express = require('express');
 const router = express.Router();
 const auth = require('../middleware/auth');
-const multer = require('../middleware/config-multer');
 const commentCtrl = require('../controllers/comment');
-
 
 /* Routes */
 

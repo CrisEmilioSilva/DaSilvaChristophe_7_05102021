@@ -132,7 +132,7 @@ module.exports.deleteUserProfile =  (req, res, next) => {
         const filename = user.dataValues.imageProfileUrl.split('/images/')[1];
         fs.unlink(`images/${filename}`, () => { 
         user.destroy({ where: {id: req.params.id} })
-        .then(() => res.status(200).json({ message: 'Profil utilisateur supprimé' }))
+        .then(() => res.status(200).json({ message: 'Profil et images utilisateur supprimé' }))
           })
       } else {
         user.destroy({ where: {id: req.params.id} })

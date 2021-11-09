@@ -48,3 +48,11 @@ export default {
 };
   
 </script>
+
+<style scoped>
+
+li a:hover {
+  border-bottom: 1px solid blue;
+}
+
+</style>

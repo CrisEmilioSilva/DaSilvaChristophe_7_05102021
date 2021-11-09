@@ -1,4 +1,5 @@
 /* Imports */
+
 const fs = require('fs');
 const models = require('../models');
 
@@ -20,7 +21,7 @@ models.User.findOne({ where: {id: req.params.id} })
       .catch((error) => {res.status(400).json({'error': 'Création du message échoué'});
     })
   })
-  .catch((error) => {res.status(500).json({error: error})
+  .catch((error) => {res.status(500).json({ error })
   });
 };
 
@@ -43,11 +44,21 @@ module.exports.getAllMessages = (req, res, next) => {
     if (messages) {
       res.status(200).json(messages);
     } else {
-      res.status(404).json({ 'error': 'Message non trouvé' });
+      res.status(404).json({ 'error': 'Messages non trouvé' });
     }
   })
-  .catch((error) => {res.status(500).json({error: error});
+  .catch((error) => {res.status(500).json({ error });
   })
+};
+
+// Get Message
+
+module.exports.getUserMessage = (req, res, next) => {
+  models.Message.findOne({ where: {id: req.params.id} })
+  .then( (message) => {res.status(200).json(message);
+  })
+  .catch((error) => {res.status(404).json({ error: 'message non trouvé'});
+  });
 };
 
 // Put Message
@@ -82,23 +93,12 @@ module.exports.deleteMessage =  (req, res, next) => {
         const filename = message.dataValues.gif.split('/images/')[1];
         fs.unlink(`images/${filename}`, () => { 
         message.destroy({ where: {id: req.params.id} })
-        .then(() => res.status(200).json({ message: 'Message supprimé' }))
+        .then(() => res.status(200).json({ message: 'Message et image message supprimé' }))
           })
       } else {
         message.destroy({ where: {id: req.params.id} })
         .then(() => res.status(200).json({ message: 'Message supprimé' }))
       }
   })
-    .catch(error =>console.log(error))  // res.status(403).json({ error }));  
-};
-
-// A voir
-
-
-module.exports.getUserMessage = (req, res, next) => {
-  models.Message.findOne({ where: {id: req.params.id} })
-  .then( (message) => {res.status(200).json(message);
-  })
-  .catch((error) => {res.status(404).json({error: error});
-  });
+    .catch(error => res.status(403).json({ error }));
 };

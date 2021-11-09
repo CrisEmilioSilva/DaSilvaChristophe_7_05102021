@@ -1,15 +1,14 @@
 <template>
- <div class="bloc-modale" v-if="revele" >
-     <div class="overlay" @click="returnHome"></div>
-     <div class="modale card">
+  <div class="bloc-modale" v-if="revele" >
+    <div class="overlay"></div>
+      <div class="modale card">
         <div class="btn-modale btn btn-danger" @click="returnHome">X</div>
-        <h2>Modifier mon message</h2>
-        <input v-model="content" type="text" maxlength="250" class="form-control w-100" id="inputPostMessage" placeholder="Modifier votre message" style="height: 3rem;">  
-         <a @click="updateMessage(id)" class="btn btn-primary rounded-pill mt-1">Modifier message</a>
-        <input @change="fileSelected"  ref="file" type="file" id="file" name="file" accept=".png, .jpg" class="card-link form-control mt-2">
-        <a @click="updateGif(id)" class="btn btn-primary rounded-pill my-1">Modifier photo</a>
-        <a @click="returnHome" class="btn btn-success rounded-pill">Modification terminée - Retour home</a>
-     </div>
+          <h2>Modifier mon message</h2>
+          <textarea v-model="content" rows="3" class="col-9 w-100" maxlength="250"></textarea>
+          <a @click="updateMessage(id)" class="btn btn-primary rounded-pill mt-1">Modifier message</a>
+          <input @change="fileSelected"  ref="file" type="file" id="file" name="file" accept=".png, .jpg" class="form-control mt-2">
+          <a @click="returnHome" class="btn btn-success rounded-pill mt-2">Modification terminée - Retour home</a>
+      </div>
  </div>
 
 </template>
@@ -37,63 +36,54 @@ export default {
   data() {
     return {
         userId: localStorage.getItem('userId'),
-        message: [],
         file:'',
         content:'',
     };
   },
 
+
+
   methods: {
 
     fileSelected: function (e){
         
-        this.file = this.$refs.file.files[0];
-        const reader = new FileReader(e);
-        reader.readAsDataURL(this.file);
-        reader.onload = e =>{
-        this.gif = e.target.result;
-        console.log(this.gif);}
-    },
+      this.file = this.$refs.file.files[0];
+      const reader = new FileReader(e);
+      reader.readAsDataURL(this.file);
+      reader.onload = e =>{
+      this.gif = e.target.result;
+      }
 
-    updateGif: function () {
-      
       const id = localStorage.getItem('messageId');
       const fd = new FormData();
-        fd.append('image', this.file )
+      fd.append('image', this.file )
       
       instance.put(`/api/messages/${id}`, fd, {
-         headers:  {
-                      'Content-Type': 'multipart/form-data',
-                      "Authorization": "Bearer " + token,
-                    }  
+        headers:  {
+                    'Content-Type': 'multipart/form-data',
+                  }  
       })
-        .then(() => { 
-          
-        })
-        .catch((error)=>{
-          console.log(error)
-        }); 
+      .then((res) => { 
+        console.log(res)
+      })
+      .catch((error)=>{
+        console.log(error)
+      }); 
     },
 
     updateMessage: function () {
+
+      const id = localStorage.getItem('messageId');
       
-      const token = localStorage.getItem('token');
-      
-      instance.put(`/api/messages/${this.userId}`,{
-        headers: {
-                  "Content-Type": "application/json",
-                  "Accept": "application/json", 
-                  "Authorization": "Bearer" + token,
-            },
-         content: this.content
+      instance.put(`/api/messages/${id}`,{
+        content: this.content
       })
-        .then((res) => { 
-          
-          console.log(res);
-        })
-        .catch((error)=>{
-          console.log(error)
-        }); 
+      .then((res) => { 
+        console.log(res);
+      })
+      .catch((error)=>{
+        console.log(error)
+      }); 
     },
 
     returnHome: function () {
@@ -102,6 +92,7 @@ export default {
     }
   }
 };
+
 </script>
 
 <style scoped>
