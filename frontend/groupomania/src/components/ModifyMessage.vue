@@ -3,11 +3,11 @@
     <div class="overlay"></div>
       <div class="modale card">
         <div class="btn-modale btn btn-danger" @click="returnHome">X</div>
-          <h2>Modifier mon message</h2>
-          <textarea v-model="content" rows="3" class="col-9 w-100" maxlength="250"></textarea>
-          <a @click="updateMessage(id)" class="btn btn-primary rounded-pill mt-1">Modifier message</a>
+          <h2 class="text-center">Modifier mon message</h2>
+          <textarea @click="e" v-model="this.content" rows="3" class="col-9 w-100" maxlength="250"></textarea>
           <input @change="fileSelected"  ref="file" type="file" id="file" name="file" accept=".png, .jpg" class="form-control mt-2">
-          <a @click="returnHome" class="btn btn-success rounded-pill mt-2">Modification terminée - Retour home</a>
+          <a @click="updateMessage(id)" class="btn btn-success rounded-pill mt-2">Modification terminée - Retour home</a>
+          <a @click="returnHome" class="w100 mx-auto mt-1 text-decoration-none">Annuler</a>
       </div>
  </div>
 
@@ -41,9 +41,20 @@ export default {
     };
   },
 
-
-
   methods: {
+
+    e: function () { 
+      
+    const idi = localStorage.getItem('messageId')
+
+    instance.get(`/api/messages/${idi}`)
+      .then((res) => { 
+        this.content = res.data.content
+      })
+      .catch((error)=>{
+        console.log(error)
+      });
+  },
 
     fileSelected: function (e){
         
@@ -63,8 +74,7 @@ export default {
                     'Content-Type': 'multipart/form-data',
                   }  
       })
-      .then((res) => { 
-        console.log(res)
+      .then(() => { 
       })
       .catch((error)=>{
         console.log(error)
@@ -78,8 +88,8 @@ export default {
       instance.put(`/api/messages/${id}`,{
         content: this.content
       })
-      .then((res) => { 
-        console.log(res);
+      .then(() => {
+        location.reload();
       })
       .catch((error)=>{
         console.log(error)
@@ -96,6 +106,10 @@ export default {
 </script>
 
 <style scoped>
+
+textarea  {
+  resize: none;
+}
 
 .bloc-modale{
     position: fixed;

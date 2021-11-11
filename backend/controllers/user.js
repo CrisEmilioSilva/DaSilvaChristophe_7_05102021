@@ -139,7 +139,7 @@ module.exports.deleteUserProfile =  (req, res, next) => {
         .then(() => res.status(200).json({ message: 'Profil utilisateur supprimé' }))
       }
   })
-    .catch(error => res.status(403).json({ error: 'Requête non autorisé' }));  
+  .catch(error => res.status(403).json({ error })); 
 };
 
 

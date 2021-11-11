@@ -3,6 +3,8 @@
     <router-link to="/"></router-link>
     <router-link to="/home"></router-link>
     <router-link to="/profile"></router-link>
+    <router-link to="/search-users"></router-link>
+    <router-link to="/profile-other-users"></router-link>
   <router-view/>
   </div>
 </template>

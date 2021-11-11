@@ -3,7 +3,7 @@
     <Nav/>
     <div class="container">
       <div class="d-flex justify-content-center">
-        <h1 class="text-center w-50 h2 mt-3 py-2 bg-white rounded-pill shadow">Mon Profil</h1>
+        <h1 class="text-center w-50 h2 mt-3 py-2 bg-white rounded-pill shadow">Profil de {{ firstName }} {{ lastName }}</h1>
       </div>
       <p v-if="errors.length" class="bg-danger text-white py-2 px-2 rounded">
         <span>Veuillez corriger les erreurs suivantes :</span>
@@ -14,28 +14,28 @@
       <div class="row d-flex justify-content-center align-items-center">
         <div class="card mx-4 my-4 text-center rounded shadow" style="width: 18rem;">
           <h2 class="card-title h4 mt-3 mb-3 text-decoration-underline">Photo de profil</h2>
-          <img :src="imageProfileUrl" class="card-img-top" alt="Photo de profil" style="height: 12rem;">
-          <form class="card-body border pt-4 mb-2">
+          <img :src="imageProfileUrl" class="card-img-top pb-3" alt="Photo de profil" style="height: 12rem;">
+          <form v-if="this.admin == true" class="card-body border pt-4 mb-2">
               <label for="file" class="form-label fw-bold ">Changer ma photo de profil</label>
               <input @change="fileSelected" ref="file" type="file" id="file" name="file" accept=".png, .jpg" class="form-control btn btn-outline-primary">
           </form>
-          <div class="mb-2">
-          <a @click="modificationPictureProfile" class="card-link btn btn-primary rounded-pill w-75 ">Confirmer Modification</a>
+          <div v-if="this.admin == true" class="mb-2">
+          <a @click="modificationPictureProfile" class="card-link btn btn-primary rounded-pill w-75">Confirmer Modification</a>
           </div>
         </div>
         <div class="card mx-4 my-4 rounded shadow" style="width: 18rem;">
           <div v-if="mode == 'profile'" class="card-body text-center">
-            <h2 class="card-title mb-3 h4 text-decoration-underline">Vos Informations</h2>
+              <h2 class="card-title mb-3 h4 text-decoration-underline">Infos</h2>
             <p class="card-text">Prénom : {{ firstName }}</p>
             <p class="card-text">Nom : {{ lastName }}</p>
             <p class="card-text">Poste : {{ job }}</p>
             <p class="card-text">Email : {{ email }}</p>
               <h3 class="card-title h5 text-decoration-underline">Bio</h3>
-              <p class="card-text bio"> Parle nous de toi {{ firstName }} 😊 : <br> {{ bio }} </p>
-            <a @click="modificationProfile" v-if="mode == 'profile'" class="btn btn-primary rounded-pill">Modifier</a>
-            <a @click="deleteProfile" v-if="mode == 'profile'" class="btn btn-danger rounded-pill mt-2">Supprimer mon profil</a>
+              <p class="card-text bio"> {{ bio }} </p>
+            <a @click="modificationProfile" v-if="mode == 'profile' && this.admin == true" class="btn btn-primary rounded-pill">Modifier</a>
+            <a @click="deleteProfile" v-if="mode == 'profile' && (this.userId  && this.admin == true)" class="btn btn-danger rounded-pill mt-2">Supprimer mon profil</a>
           </div>
-          <form v-if="mode == 'modificationProfile'" class="card-body text-center">
+          <form v-if="mode == 'modificationProfile' && this.admin == true" class="card-body text-center">
            <h2 class="card-title mb-3 h4 text-decoration-underline">Je modifie mes informations</h2>
             <div class="row mt-2"> 
               <div class="col">
@@ -102,6 +102,7 @@ export default {
   data: function (){
     return { 
       userId: localStorage.getItem('userId'),
+      seeProfileUserId: localStorage.getItem('seeProfileUserId'),
       mode: 'profile',
       firstName : '',
       lastName:'',
@@ -112,12 +113,13 @@ export default {
       file:'',
       notImgProfile,
       errors: [],
+      admin: ''
       }    
   },
 
   mounted: function () {
 
-    instance.get(`/api/users/${this.userId}`)
+    instance.get(`/api/users/${this.seeProfileUserId}`)
     .then(res => { 
       this.firstName = res.data.firstName, 
       this.lastName = res.data.lastName,
@@ -129,6 +131,8 @@ export default {
       } else {
         this.imageProfileUrl = res.data.imageProfileUrl
       }
+      this.admin = res.data.admin
+      console.log(res);
     })
     .catch((error)=>{
       console.log(error)
@@ -181,7 +185,8 @@ export default {
         job: this.job, 
         bio: this.bio,
       })
-      .then(() => {
+      .then((res) => {
+        console.log(res);
         this.mode = 'profile'
       })
       .catch((error)=>{

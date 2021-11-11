@@ -117,8 +117,8 @@ export default {
         firstName : this.firstName,
         lastName : this.lastName
       })
-      .then((res) => {
-        alert('Inscription réussie !');       
+      .then(() => {
+        alert('Inscription réussie !');   
         this.mode = 'login'
       })
       .catch((error)=>{
@@ -161,7 +161,7 @@ export default {
       .catch((error)=>{
         this.errors.push("Mot de passe incorrect !");
         console.log(error);
-      });        
+      });
     },
   }
 }

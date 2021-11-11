@@ -6,7 +6,7 @@ const auth = require('../middleware/auth');
 const multer = require('../middleware/config-multer');
 const userCtrl = require('../controllers/user');
 
-/* Routes */
+/* Routes Users */
 
 router.post('/signup', userCtrl.signup);
 router.post('/login', userCtrl.login);

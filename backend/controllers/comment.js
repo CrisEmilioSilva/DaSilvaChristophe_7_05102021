@@ -31,11 +31,11 @@ module.exports.getAllComments = (req, res, next) => {
   const order   = req.params.order; // order : Récupération des messages par ordre particulier
     
   models.Comment.findAll({ 
-    order: [(order != null) ? order.split(':') : ['createdAt', 'DESC']],
+    order: [(order != null) ? order.split(':') : ['createdAt', 'ASC']],
     attributes: (fields !== '*' && fields != null) ? fields.split(',') : null,
       include: [{
           model: models.User,
-          attributes: ['firstName','lastName','imageProfileUrl'],
+          attributes: ['firstName','lastName','imageProfileUrl','email','job','bio'],
       }]   
     })
   .then(function(comments) {

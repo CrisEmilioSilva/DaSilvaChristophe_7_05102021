@@ -4,20 +4,17 @@
     <div class="col card-body d-flex justify-content-center align-items-center flex-column py-2">
         <img :src="gif" class="card-img-top obj-fit mt-2 w-100" alt="Gif" style="height: 12rem;">
         <input v-model="content" type="text" maxlength="250" class="form-control w-100" id="inputPostMessage" placeholder="Partager avec vos collègues en écrivant une publication" style="height: 3rem;">  
-        <input @change="fileSelected" ref="file" type="file" id="file" name="file" accept=".png, .jpg" class="card-link form-control mt-2">
-        <a @click="postMessage" class="card-link btn btn-primary w-75 mt-2">Publier</a>
+        <input @change="fileSelected" ref="file" type="file" id="file" name="file" accept=".png, .jpg, .jpeg, .gif" class="card-link form-control mt-2">
+        <a @click="postMessage" class="card-link btn btn-success w-75 mt-2">Publier</a>
     </div>
   </form>
  </div>
 </template>
 
 <script>
-
 import notGifProfile from "../assets/input_home.png"
 import axios from 'axios'
-
 const token = localStorage.getItem('token');
-
 const instance = axios.create({
   baseURL: 'http://localhost:8000',
   headers: {
@@ -26,10 +23,8 @@ const instance = axios.create({
                   "Authorization": "Bearer " + token,
             }
 });
-
 export default {
 	name: 'PostMessageHome',
-
   data() {
     return {
       userId: localStorage.getItem('userId'),
@@ -38,7 +33,6 @@ export default {
       file:''
     }
   },
-
   mounted: function () {
       
     instance.get(`/api/messages`, {
@@ -59,9 +53,7 @@ export default {
       console.log(error)
     });
   },
-
   methods: {
-
     fileSelected: function (e){
       this.file = this.$refs.file.files[0];
       const reader = new FileReader(e);
@@ -90,15 +82,12 @@ export default {
     },
   }   
 }
-
 </script>
 
 <style>
-
 .obj-fit {
   object-fit: cover;
 }
-
 @media (max-width: 559px) {  
   .container {
     width: 90%;
@@ -107,7 +96,6 @@ export default {
     width: 80%;
   }
 }
-
 @media (min-width: 560px) {  
   .container {
     width: 80%;
@@ -116,12 +104,10 @@ export default {
     width: 70%;
   }
 }
-
 @media (min-width: 1199px) and (max-width: 1400px){  
   .container{
     width: 70%;
   }
   
 }
-
 </style>

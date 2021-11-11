@@ -8,21 +8,22 @@ const models = require('../models');
 // Post Message
 
 module.exports.createMessage = (req, res, next) => {
-models.User.findOne({ where: {id: req.params.id} }) 
-.then((user) => {
-    models.Message.create({
-        content: req.body.content,
-        gif: req.file ? `${req.protocol}://${req.get('host')}/images/${req.file.filename}` : null,
-        video: req.body.video,
-        likes: 0,
-        UserId: user.id,
+
+  models.User.findOne({ where: {id: req.params.id} }) 
+    .then((user) => {
+        models.Message.create({
+            content: req.body.content,
+            gif: req.file ? `${req.protocol}://${req.get('host')}/images/${req.file.filename}` : null,
+            video: req.body.video,
+            likes: 0,
+            UserId: user.id,
+          })
+          .then(() => res.status(200).json({ message: 'Nouveau message créer !'}))
+          .catch((error) => {res.status(400).json({'error': 'Création du message échoué'});
+        })
       })
-      .then(() => res.status(200).json({ message: 'Nouveau message créer !'}))
-      .catch((error) => {res.status(400).json({'error': 'Création du message échoué'});
-    })
-  })
-  .catch((error) => {res.status(500).json({ error })
-  });
+    .catch((error) => {res.status(500).json({ error })
+    });
 };
 
 // Get All Messages
@@ -87,9 +88,7 @@ module.exports.deleteMessage =  (req, res, next) => {
   
   models.Message.findOne({ where: {id: req.params.id} })
     .then(message => {  
-      console.log(message);
       if (message.dataValues.gif !== null) {
-        console.log(message.dataValues.gif);
         const filename = message.dataValues.gif.split('/images/')[1];
         fs.unlink(`images/${filename}`, () => { 
         message.destroy({ where: {id: req.params.id} })

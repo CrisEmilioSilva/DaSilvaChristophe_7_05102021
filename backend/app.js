@@ -24,7 +24,7 @@ app.use(express.urlencoded({extended:true}));
 
 app.use('/api/users', userRoutes);
 app.use('/api/messages', messageRoutes);
-app.use('/api/messages/like', likeRoutes);
+app.use('/api/like', likeRoutes);
 app.use('/api/comments', commentRoutes);
 
 /* Indique à Express qu'il faut gérer la ressource images de manière statique */

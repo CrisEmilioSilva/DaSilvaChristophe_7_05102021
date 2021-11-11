@@ -10,6 +10,8 @@ const likesCtrl = require('../controllers/like');
 router.post('/:id/liked', auth, likesCtrl.likes);
 router.post('/:id/disliked', auth, likesCtrl.unlikes);
 
+router.get('/', auth, likesCtrl.getLikes);
+
 /* Exports */
 
 module.exports = router;
