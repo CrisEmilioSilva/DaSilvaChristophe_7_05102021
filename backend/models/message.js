@@ -11,13 +11,15 @@ module.exports = (sequelize, DataTypes) => {
     */
     static associate(models) {
       // define association here
-      models.Message.belongsTo(models.User,{
-        foreignKey: "userId",
-        allowNull: false,
-        onDelete: 'cascade',
-      }),
-      models.Message.hasMany(models.Comment)
-      models.Message.hasMany(models.Like)
+      Message.belongsTo(models.User),
+      Message.hasMany(models.Comment,{
+        foreignKey: 'messageId',
+        onDelete: 'CASCADE',
+      })
+      Message.hasMany(models.Like,{
+        foreignKey: 'messageId',
+        onDelete: 'CASCADE',
+      })
     }
   };
   Message.init({

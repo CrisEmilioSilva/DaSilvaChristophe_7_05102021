@@ -11,9 +11,18 @@ module.exports = (sequelize, DataTypes) => {
     */
     static associate(models) {
       // define association here
-      models.User.hasMany(models.Message),
-      models.User.hasMany(models.Comment),
-      models.User.hasMany(models.Like)
+      User.hasMany(models.Message, {
+        foreignKey: 'userId',
+        onDelete: 'CASCADE',
+      }),
+      User.hasMany(models.Comment, {
+        foreignKey: 'userId',
+        onDelete: 'CASCADE',
+      }),
+      User.hasMany(models.Like, {
+        foreignKey: 'userId',
+        onDelete: 'CASCADE',
+      })
     }
   };
   User.init({
@@ -24,7 +33,8 @@ module.exports = (sequelize, DataTypes) => {
     job: DataTypes.STRING,
     bio: DataTypes.STRING,
     imageProfileUrl: DataTypes.STRING,
-    admin: DataTypes.BOOLEAN
+    admin: DataTypes.BOOLEAN,
+    userAccountBlock: DataTypes.BOOLEAN,
   }, {
     sequelize,
     modelName: 'User',
