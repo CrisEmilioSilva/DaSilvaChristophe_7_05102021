@@ -12,21 +12,21 @@ module.exports.likes = (req, res, next) => {
       .then((message) => {
         models.Like.create({
           MessageId : message.id,
-          UserId: message.dataValues.UserId,
+          UserId: req.body.UserId,
       })
-      .then(() => res.status(200).json({ message: 'Liked !'}))
+      .then((Like) => res.status(200).json({ Like}))
       .catch(error => res.status(401).json({ error: error}));
     })
   })
 };
 
 module.exports.unlikes = (req, res, next) => {
-  models.Like.findOne({ where: {id: req.params.id} })
-  .then((like) => {
-      like.destroy({ where: {id: req.params.id} })
+  models.Like.findOne({where: {id: req.params.id}})
+      .then(like => {
+      like.destroy({where: {MessageId: req.params.id, UserId: req.body.userId}})
       .then(() => res.status(200).json({ message: 'Disliked !'}))
       .catch(error => res.status(401).json({ error: error}));
-    })
+      });
 };
 
 // Get Likes

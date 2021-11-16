@@ -35,7 +35,7 @@ module.exports.getAllComments = (req, res, next) => {
     attributes: (fields !== '*' && fields != null) ? fields.split(',') : null,
       include: [{
           model: models.User,
-          attributes: ['firstName','lastName','imageProfileUrl','email','job','bio'],
+          attributes: ['firstName','lastName','imageProfileUrl'],
       }]   
     })
   .then(function(comments) {

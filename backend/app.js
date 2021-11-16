@@ -9,6 +9,7 @@ const commentRoutes = require('./routes/comment');
 const path = require('path');
 
 /* Middleware qui va permettre de débloquer le systeme de sécurité navigateur CORS afin que les utilisateurs est accés a l'API */
+
 app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content, Accept, Content-Type, Authorization');
@@ -24,10 +25,11 @@ app.use(express.urlencoded({extended:true}));
 
 app.use('/api/users', userRoutes);
 app.use('/api/messages', messageRoutes);
-app.use('/api/like', likeRoutes);
+app.use('/api/likes', likeRoutes);
 app.use('/api/comments', commentRoutes);
 
 /* Indique à Express qu'il faut gérer la ressource images de manière statique */
+
 app.use('/images', express.static(path.join(__dirname, 'images')));
 
 

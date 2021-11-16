@@ -1,9 +1,7 @@
 <template>
- <div id="app">
-    <Nav/>
-    <div class="container">
+    <main class="container">
       <div class="d-flex justify-content-center">
-        <h1 class="text-center w-50 h2 mt-3 py-2 bg-white rounded-pill shadow">Mon Profil</h1>
+        <h1 class="w-50 mt-3 py-2 h2 text-center bg-white rounded-pill shadow">Mon Profil</h1>
       </div>
       <p v-if="errors.length" class="bg-danger text-white py-2 px-2 rounded">
         <span>Veuillez corriger les erreurs suivantes :</span>
@@ -13,17 +11,17 @@
       </p>
       <div class="row d-flex justify-content-center align-items-center">
         <div class="card mx-4 my-4 text-center rounded shadow" style="width: 18rem;">
-          <h2 class="card-title h4 mt-3 mb-3 text-decoration-underline">Photo de profil</h2>
-          <img :src="imageProfileUrl" class="card-img-top" alt="Photo de profil" style="height: 12rem;">
+          <h2 class="card-title h4 my-3 text-decoration-underline">Photo de profil</h2>
+          <img :src="imageProfileUrl" class="card-img-top" alt="Photo profil" style="height: 12rem;">
           <form class="card-body border pt-4 mb-2">
-              <label for="file" class="form-label fw-bold ">Changer ma photo de profil</label>
-              <input @change="fileSelected" ref="file" type="file" id="file" name="file" accept=".png, .jpg" class="form-control btn btn-outline-primary">
+              <label for="file" class="form-label fw-bold">Changer ma photo de profil</label>
+              <input @change="fileSelected" ref="file" type="file" id="file" name="file" accept=".png, .jpg, .jpeg, .gif" class="form-control btn btn-outline-primary">
           </form>
           <div class="mb-2">
-          <a @click="modificationPictureProfile" class="card-link btn btn-primary rounded-pill w-75 ">Confirmer Modification</a>
+            <a @click="modificationPictureProfile" class="card-link btn btn-primary w-75 rounded-pill">Confirmer Modification</a>
           </div>
         </div>
-        <div class="card mx-4 my-4 rounded shadow" style="width: 18rem;">
+        <div class="card mx-4 my-4 rounded" style="width: 18rem;">
           <div v-if="mode == 'profile'" class="card-body text-center">
             <h2 class="card-title mb-3 h4 text-decoration-underline">Vos Informations</h2>
             <p class="card-text">Prénom : {{ firstName }}</p>
@@ -31,55 +29,49 @@
             <p class="card-text">Poste : {{ job }}</p>
             <p class="card-text">Email : {{ email }}</p>
               <h3 class="card-title h5 text-decoration-underline">Bio</h3>
-              <p class="card-text bio"> Parle nous de toi {{ firstName }} 😊 : <br> {{ bio }} </p>
+              <p class="card-text"> Parle nous de toi {{ firstName }} 😊 : <br> {{ bio }} </p>
             <a @click="modificationProfile" v-if="mode == 'profile'" class="btn btn-primary rounded-pill">Modifier</a>
-            <a @click="deleteProfile" v-if="mode == 'profile'" class="btn btn-danger rounded-pill mt-2">Supprimer mon profil</a>
+            <a @click="deleteProfile" v-if="mode == 'profile'" class="btn btn-danger mt-2 rounded-pill">Supprimer mon profil</a>
           </div>
           <form v-if="mode == 'modificationProfile'" class="card-body text-center">
            <h2 class="card-title mb-3 h4 text-decoration-underline">Je modifie mes informations</h2>
             <div class="row mt-2"> 
               <div class="col">
-                <label for="inputFirstName" class="visually-hidden">Prénom</label>
-                <input v-model="firstName" type="text"  class="form-control" id="inputFirstName" maxlength="13" placeholder="Prénom">
+                <input v-model="firstName" aria-label="Prénom" type="text" class="form-control" id="inputFirstName" maxlength="13" placeholder="Prénom">
               </div>
             </div>
             <div class="row mt-2">
               <div class="col">
-                <label for="inputLastName" class="visually-hidden" >Nom</label>
-                <input v-model="lastName" type="text" class="form-control" id="inputLastName" maxlength="13" placeholder="Nom">
+                <input v-model="lastName" aria-label="Nom" type="text" class="form-control" id="inputLastName" maxlength="13" placeholder="Nom">
               </div>
             </div>
             <div class="row mt-2">
               <div class="col">
-                <label for="inputEmail" class="visually-hidden">Email</label>
-                <input v-model="email" type="email" class="form-control" id="inputEmail" maxlength="40" placeholder="Email">
+                <input v-model="email" aria-label="Email" type="email" class="form-control" id="inputEmail" maxlength="40" placeholder="Email">
               </div>
             </div>
             <div class="row mt-2">
               <div class="col">
-                <label for="inputJob" class="visually-hidden" >Job</label>
-                <input v-model="job" type="text" class="form-control" id="inputJob" maxlength="25" placeholder="Job">
+                <input v-model="job" aria-label="Job" type="text" class="form-control" id="inputJob" maxlength="25" placeholder="Job">
               </div>
             </div>
             <div class="mb-3">
-              <h3 class="h5 text-decoration-underline">Bio</h3>
-              <textarea v-model="bio" rows="2" maxlength="120" class="form-control"></textarea>
+              <label for="bio" class="h5 text-decoration-underline" >Bio</label>
+              <textarea v-model="bio" rows="2" maxlength="120" id="bio" name="bio" class="form-control"></textarea>
             </div>
-            <a @click="updateProfile" v-if="mode == 'modificationProfile'" class="btn btn-primary mb-1 rounded-pill" >Modifier</a><br>
-            <a @click="backProfile" v-if="mode == 'modificationProfile'" href="#" class="w-75 text-decoration-none">Annuler</a>
+            <a @click="updateProfile" v-if="mode == 'modificationProfile'" class="btn btn-primary rounded-pill" >Modifier</a><br>
+            <a @click="profile" v-if="mode == 'modificationProfile'" class="w-75 text-decoration-none cursor">Annuler</a>
           </form>
         </div>
       </div> 
-    </div>
-  </div>
+    </main>
 </template>
 
 <script>
 
-import Nav from '../components/Nav.vue'
-import axios from 'axios'
-import router from '../router'
 import notImgProfile from "../assets/avatar.png"
+import router from '../router'
+import axios from 'axios'
 
 const token = localStorage.getItem('token');
 
@@ -94,11 +86,7 @@ const instance = axios.create({
 
 export default {
 	name: 'Profile',
-	
-  components: {
-		Nav,
-	},
-  
+
   data: function (){
     return { 
       userId: localStorage.getItem('userId'),
@@ -117,14 +105,18 @@ export default {
 
   mounted: function () {
 
-    instance.get(`/api/users/${this.userId}`)
+    instance.get(`/api/users/${this.userId}`, {
+      headers: {
+                "Authorization": "Bearer " + token,
+              },
+    })
     .then(res => { 
       this.firstName = res.data.firstName, 
       this.lastName = res.data.lastName,
       this.email = res.data.email,
       this.job = res.data.job,
       this.bio = res.data.bio
-      if(res.data.imageProfileUrl == null){
+      if(res.data.imageProfileUrl === null){
         this.imageProfileUrl = notImgProfile
       } else {
         this.imageProfileUrl = res.data.imageProfileUrl
@@ -143,10 +135,6 @@ export default {
     
     modificationProfile: function () {
       this.mode = 'modificationProfile'
-    },
-    
-    backProfile: function () {
-      this.mode = 'profile'
     },
     
     updateProfile: function () {
@@ -175,6 +163,9 @@ export default {
       }
       
       instance.put(`/api/users/${this.userId}`, {
+        headers: {
+                "Authorization": "Bearer " + token,
+              },
         firstName: this.firstName, 
         lastName: this.lastName,
         email: this.email,
@@ -206,10 +197,10 @@ export default {
       instance.put(`api/users/${this.userId}`, fd, {
         headers:  {
                       'Content-Type': 'multipart/form-data',
+                      "Authorization": "Bearer " + token,
                   },
       })
-      .then((res) => {
-        console.log(res);
+      .then(() => {
         alert('Votre photo de profil a bien été modifié');
       })
       .catch((error)=>{
@@ -220,10 +211,14 @@ export default {
     deleteProfile: function () {
       
       if (!window.confirm ('Votre profil va être supprimé ! Cliquez sur OK pour confirmer ou ANNULER pour annuler la demande !')){
-        return router.push({ path: 'profile' });
+        return router.push({ path: '/profile' });
       } 
       
-      instance.delete(`/api/users/${this.userId}`)
+      instance.delete(`/api/users/${this.userId}`,{
+        headers: {
+                "Authorization": "Bearer " + token,
+              },
+      })
       .then(() => { 
         localStorage.clear();
         alert('Votre profil a bien été supprimé !')
@@ -246,6 +241,10 @@ export default {
 
 textarea  {
   resize: none;
+}
+
+.cursor:hover {
+cursor: pointer;
 }
 
 </style>

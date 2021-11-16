@@ -7,8 +7,8 @@ const likesCtrl = require('../controllers/like');
 
 /* Routes */
 
-router.post('/:id/liked', auth, likesCtrl.likes);
-router.post('/:id/disliked', auth, likesCtrl.unlikes);
+router.post('/liked/:id', auth, likesCtrl.likes);
+router.post('/disliked/:id', auth, likesCtrl.unlikes);
 
 router.get('/', auth, likesCtrl.getLikes);
 

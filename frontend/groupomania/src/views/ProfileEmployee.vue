@@ -1,20 +1,20 @@
 <template>
 	<div>
 		<Nav/>
-		<Profile/>
+		<ProfileEmployee/>
 	</div>
 </template>
 
 <script>
 
 import Nav from '../components/Nav/Nav.vue'
-import Profile from '../components/Profile.vue'
+import ProfileEmployee from '../components/ProfileEmployee.vue'
 
 export default {
 	name: 'Home',
 	
 	components: {
-		Profile, Nav
+		ProfileEmployee, Nav
 	},
 };
 

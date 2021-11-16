@@ -25,10 +25,6 @@ module.exports = {
         allowNull: true,
         type: Sequelize.STRING
       },
-      video: {
-        allowNull: true,
-        type: Sequelize.STRING
-      },
       likes: {
         allowNull: true,
         default: 0,

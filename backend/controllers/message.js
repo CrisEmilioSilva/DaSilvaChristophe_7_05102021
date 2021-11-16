@@ -14,7 +14,6 @@ module.exports.createMessage = (req, res, next) => {
         models.Message.create({
             content: req.body.content,
             gif: req.file ? `${req.protocol}://${req.get('host')}/images/${req.file.filename}` : null,
-            video: req.body.video,
             likes: 0,
             UserId: user.id,
           })

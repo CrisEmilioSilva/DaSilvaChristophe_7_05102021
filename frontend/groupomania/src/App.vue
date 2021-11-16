@@ -1,18 +1,20 @@
 <template>
   <div id="app">
-    <router-link to="/"></router-link>
-    <router-link to="/home"></router-link>
-    <router-link to="/profile"></router-link>
-    <router-link to="/search-users"></router-link>
-    <router-link to="/profile-other-users"></router-link>
-  <router-view/>
+      <router-link to="/" aria-label="connexion/inscription"></router-link>
+      <router-link to="/home" aria-label="accueil"></router-link>
+      <router-link to="/profile" aria-label="mon profil"></router-link>
+      <router-link to="/search-users" aria-label="rechercher utilisateur"></router-link>
+      <router-link to="/profile-employee" aria-label="profil utilisateur groupomania"></router-link>
+    <router-view/>
   </div>
 </template>
 
 <script>
+
 export default {
   name: 'App',
 }
+
 </script>
 
 <style>
@@ -22,6 +24,7 @@ body {
 }
 
 #app {
+  font-family: 'Times New Roman', Times, serif;
   box-sizing: border-box;
   width: 100%;
   height: 100%;

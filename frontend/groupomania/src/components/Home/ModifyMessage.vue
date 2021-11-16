@@ -1,16 +1,15 @@
 <template>
   <div class="bloc-modale" v-if="revele" >
     <div class="overlay"></div>
-      <div class="modale card">
-        <div class="btn-modale btn btn-danger" @click="returnHome">X</div>
+      <div @click="messageContent" class="modale card">
+        <div @click="returnHome" class="btn-modale btn btn-danger">X</div>
           <h2 class="text-center">Modifier mon message</h2>
-          <textarea @click="e" v-model="this.content" rows="3" class="col-9 w-100" maxlength="250"></textarea>
-          <input @change="fileSelected"  ref="file" type="file" id="file" name="file" accept=".png, .jpg" class="form-control mt-2">
+          <textarea v-model="this.content" aria-label="Modifiez votre message" rows="3" class="col-9 w-100 mt-1" maxlength="250"></textarea>
+          <input @change="fileSelected" aria-label="Modifiez votre image" ref="file" type="file" id="file" name="file" accept=".png, .jpg, .jpeg, .gif" class="form-control mt-2">
           <a @click="updateMessage(id)" class="btn btn-success rounded-pill mt-2">Modification terminée - Retour home</a>
-          <a @click="returnHome" class="w100 mx-auto mt-1 text-decoration-none">Annuler</a>
+          <a @click="returnHome" class="mx-auto mt-1 text-decoration-none text-black cursor">Annuler</a>
       </div>
- </div>
-
+  </div>
 </template>
 
 <script>
@@ -43,11 +42,15 @@ export default {
 
   methods: {
 
-    e: function () { 
+    messageContent: function () { 
       
-    const idi = localStorage.getItem('messageId')
+    const messageId = localStorage.getItem('messageId')
 
-    instance.get(`/api/messages/${idi}`)
+    instance.get(`/api/messages/${messageId}`,{
+      headers:{
+                "Authorization": "Bearer " + token,
+              }
+    })
       .then((res) => { 
         this.content = res.data.content
       })
@@ -72,6 +75,7 @@ export default {
       instance.put(`/api/messages/${id}`, fd, {
         headers:  {
                     'Content-Type': 'multipart/form-data',
+                    "Authorization": "Bearer " + token,
                   }  
       })
       .then(() => { 
@@ -86,6 +90,9 @@ export default {
       const id = localStorage.getItem('messageId');
       
       instance.put(`/api/messages/${id}`,{
+        headers:{
+                "Authorization": "Bearer " + token,
+              },
         content: this.content
       })
       .then(() => {
@@ -106,6 +113,10 @@ export default {
 </script>
 
 <style scoped>
+
+.cursor:hover {
+cursor: pointer;
+}
 
 textarea  {
   resize: none;
@@ -130,7 +141,7 @@ textarea  {
     bottom: 0;
     left: 0;
     right: 0;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0.7);
 }
 
 .modale{
@@ -139,12 +150,34 @@ textarea  {
     padding: 50px;
     position: fixed;
     top: 30%;
+    width: 90%;
 }
 
 .btn-modale{
     position: absolute;
     top: 10px;
     right: 10px;
+}
+
+@media (min-width: 780px) and (max-width: 1199px){  
+  .modale{
+    width: 75%;
+  }
+  
+}
+
+@media (min-width: 991px) and (max-width: 1199px){  
+  .modale{
+    width: 65%;
+  }
+ 
+}
+
+@media (min-width: 1200px) and (max-width: 1400px){  
+  .modale{
+    width: 55%;
+  }
+  
 }
 
 </style>

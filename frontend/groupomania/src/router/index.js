@@ -2,8 +2,8 @@ import { createRouter, createWebHistory } from 'vue-router'
 import Login from '../views/Login.vue'
 import Home from '../views/Home.vue'
 import Profile from '../views/Profile.vue'
-import Search from '../views/Search.vue'
-import ProfileOtherUsers from '../views/ProfileOtherUsers.vue'
+import CompanyEmployees from '../views/CompanyEmployees.vue'
+import ProfileEmployee from '../views/ProfileEmployee.vue'
 
 const routes = [
   {
@@ -24,14 +24,14 @@ const routes = [
 
   {
     path: '/search-users',
-    name: 'Search',
-    component: Search
+    name: 'CompanyEmployees',
+    component: CompanyEmployees
   },
 
   {
-    path: '/profile-other-users',
-    name: 'ProfileOtherUsers',
-    component: ProfileOtherUsers
+    path: '/profile-employee',
+    name: 'ProfileEmployee',
+    component: ProfileEmployee
   },
 ]
 

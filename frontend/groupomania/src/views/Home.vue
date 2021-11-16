@@ -1,23 +1,22 @@
 <template>
-	<div id="app">
+	<div>
 		<Nav />
-		<PostMessageHome />
+		<PostMessage />
 		<MessagesHome />
 	</div>
 </template>
 
 <script>
 
-import Nav from '../components/Nav.vue'
-import PostMessageHome from '../components/PostMessageHome.vue'
-import MessagesHome from '../components/MessagesHome.vue'
-
+import Nav from '../components/Nav/Nav.vue'
+import PostMessage from '../components/Home/PostMessage.vue'
+import MessagesHome from '../components/Home/MessagesHome.vue'
 
 export default {
 	name: 'Home',
 	
 	components: {
-		Nav, PostMessageHome, MessagesHome,
+		Nav, PostMessage, MessagesHome,
 	},
 };
 

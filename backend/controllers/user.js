@@ -49,6 +49,7 @@ module.exports.signup = (req, res, next) => {
                 lastName: lastName,
                 imageProfileUrl: req.body.imageProfileUrl,
                 admin: 0,
+                userAccountBlock: 0,
               })
                 return res.status(201).json({ message: 'Nouvel utilisateur créer' });
             }) 
@@ -87,7 +88,7 @@ module.exports.login = (req, res, next) => {
 // Get all user 
 
 module.exports.getAllUser = (req, res, next) => {
-  models.User.findAll({ attributes: ['id','firstName','lastName','email','job','bio','imageProfileUrl'] })
+  models.User.findAll({ attributes: ['id','firstName','lastName','email','job','bio','imageProfileUrl','admin'] })
   .then((users) => {res.status(200).json(users);
   })
   .catch((error) => {res.status(400).json({ error });
