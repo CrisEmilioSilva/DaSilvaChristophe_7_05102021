@@ -1,5 +1,5 @@
 <template>
-    <main class="container">
+    <main class="container mb-3">
       <div class="d-flex justify-content-center">
         <h1 class="h1size text-center h2 mt-3 py-2 px-3 bg-white rounded-pill shadow">Profil de {{ firstName }} {{ lastName }}</h1>
       </div>
@@ -28,11 +28,14 @@
               <p class="card-text">Email : {{ email }}</p>
             <h3 class="card-title h5 text-decoration-underline">Bio</h3>
               <p class="card-text bio"> {{ bio }} </p>
-            <a @click="blockAccount" v-if="this.userAccountBlock == false && this.admin == true" class="btn btn-danger rounded-pill mt-2 ">Bloquer utilsateur</a>
-            <a @click="unblockAccount" v-if="this.userAccountBlock == true && this.admin == true" class="btn btn-success rounded-pill mt-2 ">Déloquer utilsateur</a>
+            <a @click="blockAccount" v-if="this.userAccountBlock == false && this.admin == true" class="btn btn-danger rounded-pill mt-2 ">Bloquer utilisateur</a>
+            <a @click="unblockAccount" v-if="this.userAccountBlock == true && this.admin == true" class="btn btn-success rounded-pill mt-2 ">Déloquer utilisateur</a>
           </div>
         </div>
-      </div> 
+      </div>
+      <div class="text-center mt-2">
+        <a href="/search-users" class="btn btn-primary rounded-pill">Recherchez vos collègues</a>
+      </div>
     </main>
 </template>
 

@@ -1,5 +1,5 @@
 <template>
- <div class="container d-flex justify-content-center my-3">
+ <div v-if="userAccountBlock == false" class="container d-flex justify-content-center my-3">
   <form class="form row card border rounded" enctype="multipart/form-data">
     <p v-if="errors.length" class="bg-danger text-white py-1 px-2 rounded">
       <span>Veuillez corriger les erreurs suivantes :</span>
@@ -42,11 +42,24 @@ export default {
       content:'',
       gif: '',
       file:'',
+      userAccountBlock:'',
       errors: []
     }
   },
 
   mounted: function () {
+
+     instance.get(`/api/users/${this.userId}`,{
+      headers: {
+                "Authorization": "Bearer " + token,
+              }
+    })
+    .then(res => { 
+      this.userAccountBlock = res.data.userAccountBlock
+    })
+    .catch((error)=>{
+      console.log(error)
+    });  
 
     instance.get(`/api/messages`, {
       headers: {

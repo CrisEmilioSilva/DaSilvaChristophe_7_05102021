@@ -1,10 +1,10 @@
 <template>
-  <div class="bloc-modale" v-if="revele" >
+  <div class="bloc-modale" v-if="revele">
     <div class="overlay"></div>
-      <div @click="messageContent" class="modale card">
+      <div class="modale card">
         <div @click="returnHome" class="btn-modale btn btn-danger">X</div>
           <h2 class="text-center">Modifier mon message</h2>
-          <textarea v-model="this.content" aria-label="Modifiez votre message" rows="3" class="col-9 w-100 mt-1" maxlength="250"></textarea>
+          <textarea @click="e" v-model="this.content" aria-label="Modifiez votre message" rows="3" class="col-9 w-100 mt-1" maxlength="250"> </textarea>
           <input @change="fileSelected" aria-label="Modifiez votre image" ref="file" type="file" id="file" name="file" accept=".png, .jpg, .jpeg, .gif" class="form-control mt-2">
           <a @click="updateMessage(id)" class="btn btn-success rounded-pill mt-2">Modification terminée - Retour home</a>
           <a @click="returnHome" class="mx-auto mt-1 text-decoration-none text-black cursor">Annuler</a>
@@ -39,17 +39,17 @@ export default {
         content:'',
     };
   },
-
+  
   methods: {
 
-    messageContent: function () { 
-      
-    const messageId = localStorage.getItem('messageId')
+    e: function (){
 
-    instance.get(`/api/messages/${messageId}`,{
+    const id = localStorage.getItem('messageId')
+
+    instance.get(`/api/messages/` + id,{
       headers:{
                 "Authorization": "Bearer " + token,
-              }
+              },
     })
       .then((res) => { 
         this.content = res.data.content
@@ -57,7 +57,7 @@ export default {
       .catch((error)=>{
         console.log(error)
       });
-  },
+     },
 
     fileSelected: function (e){
         
@@ -93,7 +93,7 @@ export default {
         headers:{
                 "Authorization": "Bearer " + token,
               },
-        content: this.content
+      content: this.content || this.$parent.content
       })
       .then(() => {
         location.reload();

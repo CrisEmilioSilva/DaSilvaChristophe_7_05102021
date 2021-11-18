@@ -4,25 +4,26 @@
     <div v-for="message in messages" v-bind:key="message.id" class="row card mt-3">
       <div class="card-body border-bottom shadow">
         <div class="d-flex align-items-center">
-          <div class="col-4">
+          <div class="col-3">
             <img :src="message.User.imageProfileUrl || notImgProfile" class="card-img-top rounded-pill" alt="Photo de profil" style="width: 3rem; height: 3rem;">
           </div>
           <div class="col-4">
-            <span class="fw-bold border-bottom py-1"> {{ message.User.firstName }} {{ message.User.lastName}} </span>
+            <span class="fw-bold border-bottom py-1"> {{ message.User.firstName }} <br> {{ message.User.lastName}} </span>
           </div>
           <div>
-            <span class="col-4 fw-bold border-bottom py-1"><img src="../../assets/Logo/icon.svg" alt="Logo Groupomania" width="30" height="34"> {{message.User.job}}</span>
+            <span class="col-5 fw-bold border-bottom py-1"> {{ message.User.job }} <img src="../../assets/Logo/icon.svg" alt="Logo Groupomania" width="30" height="34"></span>
           </div>
         </div> 
       </div>
       <div class="row d-flex align-items-center mt-2">
         <div class="col-10 bg-light border-end border-success d-flex flex-column align-items-center"> 
           <img :src="message.gif || notGifProfile" class="obj-fit rounded mt-2" alt="Gif">
-          <p class="text-center mt-2 border-bottom">{{ message.content }} <br> Posté le {{ format_date(message.createdAt) }}</p>
+          <p class="text-center mt-2 border-bottom">{{ message.content }}</p>
+          <span>Posté le {{ format_date(message.createdAt) }}  </span>
         </div>
         <div class="col-2 d-flex justify-content-center">
-          <div v-if="userAccountBlock == false" class="bg-light w-50 d-flex flex-column align-items-center ms-4 py-2 px-4 border rounded-pill shadow">
-            <span class="py-1 px-1">
+          <div v-if="userAccountBlock == false" class="bg-light w-50 d-flex flex-column align-items-center ms-4  px-4 border rounded-pill shadow">
+            <span class="pt-1 px-1">
               <a @click="toggleModal(message.id)" v-if="userId == message.UserId || this.admin == true" data-bs-toggle="tooltip" data-bs-placement="right" title="Modifier">
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="blue" class="bi bi-arrow-clockwise cursor" viewBox="0 0 16 16">
                 <path fill-rule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z"/>
@@ -31,24 +32,25 @@
               </a>
             <ModifyMessage v-bind:revele="revele" v-bind:toggleModal="toggleModal"></ModifyMessage>
             </span>
-            <span class="py-1 px-1">
+            <span class="pt-1 px-1">
               <a @click="deleteMessage(message.id)" v-if="userId == message.UserId || this.admin == true" data-bs-toggle="tooltip" data-bs-placement="right" title="Supprimer">
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="red" class="bi bi-archive cursor" viewBox="0 0 16 16">
                 <path d="M0 2a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1v7.5a2.5 2.5 0 0 1-2.5 2.5h-9A2.5 2.5 0 0 1 1 12.5V5a1 1 0 0 1-1-1V2zm2 3v7.5A1.5 1.5 0 0 0 3.5 14h9a1.5 1.5 0 0 0 1.5-1.5V5H2zm13-3H1v2h14V2zM5 7.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5z"/>
                 </svg>
               </a>
             </span>
-            <span class="py-1 px-1">
-              <a @click="liked(message.id)" data-bs-toggle="tooltip" data-bs-placement="right" title="Like" >
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="green" class="bi bi-suit-heart cursor" viewBox="0 0 16 16">
-                <path d="m8 6.236-.894-1.789c-.222-.443-.607-1.08-1.152-1.595C5.418 2.345 4.776 2 4 2 2.324 2 1 3.326 1 4.92c0 1.211.554 2.066 1.868 3.37.337.334.721.695 1.146 1.093C5.122 10.423 6.5 11.717 8 13.447c1.5-1.73 2.878-3.024 3.986-4.064.425-.398.81-.76 1.146-1.093C14.446 6.986 15 6.131 15 4.92 15 3.326 13.676 2 12 2c-.777 0-1.418.345-1.954.852-.545.515-.93 1.152-1.152 1.595L8 6.236zm.392 8.292a.513.513 0 0 1-.784 0c-1.601-1.902-3.05-3.262-4.243-4.381C1.3 8.208 0 6.989 0 4.92 0 2.755 1.79 1 4 1c1.6 0 2.719 1.05 3.404 2.008.26.365.458.716.596.992a7.55 7.55 0 0 1 .596-.992C9.281 2.049 10.4 1 12 1c2.21 0 4 1.755 4 3.92 0 2.069-1.3 3.288-3.365 5.227-1.193 1.12-2.642 2.48-4.243 4.38z"/>
+            <span class="pt-1 px-1">
+              <a @click="liked(message.id)" data-bs-toggle="tooltip" data-bs-placement="right" title="J'aime" >
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="green" class="bi bi-suit-heart-fill cursor noActive" viewBox="0 0 16 16">
+                  <path d="M4 1c2.21 0 4 1.755 4 3.92C8 2.755 9.79 1 12 1s4 1.755 4 3.92c0 3.263-3.234 4.414-7.608 9.608a.513.513 0 0 1-.784 0C3.234 9.334 0 8.183 0 4.92 0 2.755 1.79 1 4 1z"/>
                 </svg>
               </a>
+              {{message.likes}}
             </span>
-            <span v-for="like in likes" v-bind:key="like.id" class="py-1 px-1">
-              <a @click="disliked(like.id)" v-if="mode == 'disliked' && (this.userId == like.UserId && message.id == this.MessageId)" data-bs-toggle="tooltip" data-bs-placement="right" title="Like" >
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="blue" class="bi bi-suit-heart cursor" viewBox="0 0 16 16">
-                <path d="m8 6.236-.894-1.789c-.222-.443-.607-1.08-1.152-1.595C5.418 2.345 4.776 2 4 2 2.324 2 1 3.326 1 4.92c0 1.211.554 2.066 1.868 3.37.337.334.721.695 1.146 1.093C5.122 10.423 6.5 11.717 8 13.447c1.5-1.73 2.878-3.024 3.986-4.064.425-.398.81-.76 1.146-1.093C14.446 6.986 15 6.131 15 4.92 15 3.326 13.676 2 12 2c-.777 0-1.418.345-1.954.852-.545.515-.93 1.152-1.152 1.595L8 6.236zm.392 8.292a.513.513 0 0 1-.784 0c-1.601-1.902-3.05-3.262-4.243-4.381C1.3 8.208 0 6.989 0 4.92 0 2.755 1.79 1 4 1c1.6 0 2.719 1.05 3.404 2.008.26.365.458.716.596.992a7.55 7.55 0 0 1 .596-.992C9.281 2.049 10.4 1 12 1c2.21 0 4 1.755 4 3.92 0 2.069-1.3 3.288-3.365 5.227-1.193 1.12-2.642 2.48-4.243 4.38z"/>
+            <span v-for="like in likes" v-bind:key="like.id" class="pb-1 px-1">
+              <a @click="disliked(message.id)" v-if="like.MessageId == message.id && like.UserId == this.userId" data-bs-toggle="tooltip" data-bs-placement="right" title="J'aime" >
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="red" class="bi bi-suit-heart-fill cursor" viewBox="0 0 16 16">
+                  <path d="M4 1c2.21 0 4 1.755 4 3.92C8 2.755 9.79 1 12 1s4 1.755 4 3.92c0 3.263-3.234 4.414-7.608 9.608a.513.513 0 0 1-.784 0C3.234 9.334 0 8.183 0 4.92 0 2.755 1.79 1 4 1z"/>
                 </svg>
               </a>
             </span>
@@ -75,7 +77,7 @@
               </div>
               <div v-if="userAccountBlock == false" class="col-9 d-flex justify-content-between">
                 <p class="ps-2"> Posté le {{ format_date(comment.createdAt) }} </p>
-                <a @click="modifComment(comment.id)" v-if="userId == comment.UserId || this.admin == true" class="noActive text-decoration-none text-end cursor text-black">Modifier</a>
+                <a @click="modifComment(comment.id)" v-if="userId == comment.UserId && mode !== 'modifComment' || this.admin == true && mode !== 'modifComment'" class="text-decoration-none text-end cursor text-black">Modifier</a>
                 <a @click="annulerModifCom()" v-if="userId == comment.UserId && mode == 'modifComment' || this.admin == true && mode == 'modifComment'" class="text-decoration-none text-end cursor text-black">Annuler</a>  
               </div>
               <div v-if="userAccountBlock == false" class="col-3">
@@ -160,9 +162,7 @@ export default {
     });
 
     instance.get(`/api/users/${this.userId}`,{
-       headers: {
-                "Content-Type": "application/json",
-                "Accept": "application/json", 
+      headers: {
                 "Authorization": "Bearer " + token,
               }
     })
@@ -187,9 +187,7 @@ export default {
     });
 
     instance.get(`/api/comments/` ,{
-      headers: {
-                "Content-Type": "application/json",
-                "Accept": "application/json", 
+      headers: { 
                 "Authorization": "Bearer " + token,
               }
     })
@@ -204,13 +202,13 @@ export default {
       headers: {
                 "Authorization": "Bearer " + token,
               }
-      })
-      .then(res => {
-        this.likes = res.data
-      })
-      .catch((error)=>{
-        console.log(error)
-      });
+    })
+    .then(res => {
+      this.likes = res.data
+    })
+    .catch((error)=>{
+      console.log(error)
+    });
   },
 
   methods: {
@@ -263,10 +261,6 @@ export default {
      
       this.mode = 'modifComment'
 
-      if(this.mode == 'modifComment') {
-        document.querySelector('.noActive').style.display = 'none';
-      }
-
       instance.get(`/api/comments/` + id,)
       .then(res => { 
         this.commentId = res.data.id
@@ -308,38 +302,44 @@ export default {
       }); 
     },
 
-    // Like
+    // Like and Dislike
 
     liked: function (id) {
-
+                    
       instance.post(`/api/likes/liked/` + id,{
         headers: {
                 "Authorization": "Bearer " + token,
               },
-        UserId: localStorage.getItem('userId')
-        })
-        .then((res) => {
-          this.mode = 'disliked';
-          console.log(res.data);
-        })
-        .catch((error)=>{
-          console.log(error)
-        }) 
+        UserId: localStorage.getItem('userId'),
+        liked: 1
+      })
+      .then(() => {
+        location.reload()
+      })
+      .catch((error)=>{
+        console.log(error)
+      })  
     },
-
+    
     disliked: function (id) {
-
-       instance.post(`/api/likes/disliked/` + id)
-        .then((res) => { 
-          this.mode = 'liked';
-          console.log(res.data.id);
-        })
-        .catch((error)=>{
-          console.log(error)
-        })
+                    
+      instance.post(`/api/likes/disliked/` + id,{
+        headers: {
+                "Authorization": "Bearer " + token,
+              },
+        UserId: localStorage.getItem('userId'),
+        liked: 0
+      })
+      .then(() => {
+        location.reload()
+      })
+      .catch((error)=>{
+        console.log(error)
+      })  
     },
   }
 }
+
 </script>
 
 <style scoped>
