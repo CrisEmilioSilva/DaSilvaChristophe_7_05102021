@@ -48,7 +48,7 @@
               {{message.likes}}
             </span>
             <span v-for="like in likes" v-bind:key="like.id" class="pb-1 px-1">
-              <a @click="disliked(message.id)" v-if="like.MessageId == message.id && like.UserId == this.userId" data-bs-toggle="tooltip" data-bs-placement="right" title="J'aime" >
+              <a @click="disliked(message.id)" v-if="like.MessageId == message.id && like.UserId == this.userId" data-bs-toggle="tooltip" data-bs-placement="right" title="Je n'aime plus" >
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="red" class="bi bi-suit-heart-fill cursor" viewBox="0 0 16 16">
                   <path d="M4 1c2.21 0 4 1.755 4 3.92C8 2.755 9.79 1 12 1s4 1.755 4 3.92c0 3.263-3.234 4.414-7.608 9.608a.513.513 0 0 1-.784 0C3.234 9.334 0 8.183 0 4.92 0 2.755 1.79 1 4 1z"/>
                 </svg>
@@ -233,7 +233,7 @@ export default {
       
       instance.delete(`/api/messages/`+ id)
       .then(() => { 
-        alert('post supprimé !');
+        alert('Post supprimé !');
         location.reload();
       })
       .catch((error)=>{

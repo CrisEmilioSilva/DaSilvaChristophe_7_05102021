@@ -14,7 +14,7 @@
             <a href="/home" class="nav-link text-black">Accueil</a>
           </li>
           <li class="nav-item">
-            <a href="/profile" class="nav-link text-black">Profil</a>
+            <a href="/profile" class="nav-link text-black">Mon Profil</a>
           </li>
           <li>
             <a href="/search-users" class="nav-link pe-3 text-decoration-none text-black"> Retrouvez vos collegues
